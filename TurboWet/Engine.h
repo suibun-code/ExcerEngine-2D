@@ -66,10 +66,10 @@ public:
 	int get_window_width() { return window_width; }
 	int get_window_height() { return window_height; }
 	void get_logical_size() { SDL_RenderGetLogicalSize(SDL_m_Renderer, &window_width, &window_height); }
-	SDL_Window* get_window() { return SDL_m_Window; }
-	SDL_Renderer* get_renderer() { return SDL_m_Renderer; }
-	StateMachine* get_FSM() { return m_p_FSM; }
-	AudioManager* get_AM() { return m_p_AM; }
+	SDL_Window *get_window() { return SDL_m_Window; }
+	SDL_Renderer *get_renderer() { return SDL_m_Renderer; }
+	StateMachine *get_FSM() { return m_p_FSM; }
+	AudioManager *get_AM() { return m_p_AM; }
 	void wait_for(int time);
 	int round64(int num);
 	bool tick();

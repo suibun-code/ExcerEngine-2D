@@ -3,25 +3,23 @@
 #include "FSM.h"
 #include "Engine.h"
 #include "ConsoleIO.h"
-#include "Button.h"
 
-class Title : public State
+class SettingsState : public State
 {
 private:
-	Engine* ENGINE = Engine::singleton_instance();
-
 	std::vector<Button*> m_v_buttons;
-	std::vector<ButtonToggle*> m_v_buttontoggles;
 	std::vector<Image*> m_v_images;
-	enum btn { play, settings, mapper };
-	enum btn_toggle { mute };
+	enum btn { go_back };
 
 public:
-	Title() : State("Title") {}
+	SettingsState() : State("Settings") {}
 	void enter();
 	void update();
 	void render();
 	void resume() {}
 	void exit();
+
+	template <class T>
+	void clean_vector(std::vector<T> vec);
 };
 

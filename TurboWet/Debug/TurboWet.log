@@ -1,10 +1,6 @@
-﻿  Button.cpp
-  ButtonToggle.cpp
-  ConsoleIO.cpp
-  Engine.cpp
-  FSM.cpp
-  Image.cpp
-  Main.cpp
-  Title.cpp
+﻿  Engine.cpp
+  GameState.cpp
+  MappingState.cpp
+  TitleState.cpp
   Generating Code...
   TurboWet.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\Debug\TurboWet.exe

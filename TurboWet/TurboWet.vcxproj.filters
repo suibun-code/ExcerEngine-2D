@@ -65,7 +65,16 @@
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Title.cpp">
+    <ClCompile Include="TitleState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="SettingsState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="MappingState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
       <Filter>States</Filter>
     </ClCompile>
   </ItemGroup>
@@ -118,7 +127,16 @@
     <ClInclude Include="..\include\imgui\imstb_truetype.h">
       <Filter>imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Title.h">
+    <ClInclude Include="TitleState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="SettingsState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="MappingState.h">
+      <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
       <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>

@@ -9,6 +9,7 @@
 #include "Image.h"
 #include "Player.h"
 
+
 class State
 {
 protected:
@@ -48,70 +49,5 @@ public:
 	void change_state(State* pState);
 	void pop_state();
 	void clean();
-	std::vector<State*>& get_states() { return m_v_states; }
-};
-
-class TitleState : public State
-{
-private:
-	std::vector<Button*> m_v_buttons;
-	std::vector<ButtonToggle*> m_v_buttontoggles;
-	std::vector<Image*> m_v_images;
-	enum btn { play, settings, mapper };
-	enum btn_toggle { mute };
-
-public:
-	TitleState() : State("Title") {}
-	void enter();
-	void update();
-	void render();
-	void resume() {}
-	void exit();
-};
-
-class SettingsState : public State
-{
-private:
-	std::vector<Button*> m_v_buttons;
-	std::vector<Image*> m_v_images;
-	enum btn { go_back };
-
-public:
-	SettingsState() : State("Settings") {}
-	void enter();
-	void update();
-	void render();
-	void resume() {}
-	void exit();
-};
-
-class GameState : public State
-{
-private:
-	std::vector<Image*> m_v_images;
-	SDL_Texture* player_texture = nullptr;
-	Player* player = nullptr;
-
-public:
-	GameState() : State("Game") {}
-	void enter();
-	void update();
-	void render();
-	void resume() {}
-	void exit();
-};
-
-class MappingState : public State
-{
-private:
-	SDL_Rect grid[20][12] = { 0, 0, 0, 0 };
-	std::vector<Image*> m_v_images;
-
-public:
-	MappingState() : State("Mapping") {}
-	void enter();
-	void update();
-	void render();
-	void resume() {}
-	void exit();
+	std::vector<State*> &get_states() { return m_v_states; }
 };

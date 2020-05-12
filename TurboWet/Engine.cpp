@@ -3,6 +3,7 @@
 #include <chrono>
 
 #include "Engine.h"
+#include "TitleState.h"
 
 Engine* Engine::instance = nullptr;
 
