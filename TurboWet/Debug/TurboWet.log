@@ -6,30 +6,5 @@
   Image.cpp
   Main.cpp
   Title.cpp
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(6,25): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(13,2): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(23,2): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(24,2): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(25,2): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(40,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(42,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(44,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(46,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(48,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(49,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(51,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(52,3): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(54,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(55,21): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(56,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(57,21): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(58,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(59,21): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(60,6): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(61,21): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(66,18): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(79,20): error C2065: 'ENGINE': undeclared identifier
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(79,46): error C2660: 'State::render_font': function does not take 3 arguments
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\FSM.h(33,7): message : see declaration of 'State::render_font'
-C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\TurboWet\Title.cpp(90,2): error C2065: 'ENGINE': undeclared identifier
   Generating Code...
+  TurboWet.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\TurboWet\Debug\TurboWet.exe
