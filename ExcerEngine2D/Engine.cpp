@@ -12,6 +12,11 @@ Engine::~Engine() {}
 
 bool Engine::init_all(const char* title, const int xpos, const int ypos, const int width, const int height, const int flags)
 {
+	//Use OpenGL 3.1 core
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 1);
@@ -85,18 +90,18 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		return false;
 	}
 
-	//Use OpenGL 3.1 core
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
 	//Create context
-	SDL_GLContext gContext = SDL_GL_CreateContext(SDL_m_Window);
+	gContext = SDL_GL_CreateContext(SDL_m_Window);
 
 	if (gContext == NULL)
 	{
 		printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
 		m_b_running = false;
+	}
+
+	if (!initGL())
+	{
+		printf("Unable to initialize OpenGL!\n");
 	}
 
 	srand((unsigned)time(NULL)); //set random seed

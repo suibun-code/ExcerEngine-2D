@@ -25,14 +25,20 @@
 class Engine
 {
 private:
+	//engine instance
 	static Engine* instance;
 
 	//GLEW
+	SDL_GLContext gContext; //OpenGL context
+
+	bool gRenderQuad = true; //render flag
+
 	GLuint gProgramID = 0;
 	GLint gVertexPos2DLocation = -1;
 	GLuint gVBO = 0;
 	GLuint gIBO = 0;
 
+	//boolean checks
 	bool m_b_running = false;
 	bool m_b_gotTick = false;
 	bool m_b_LMBState = false;
@@ -49,12 +55,15 @@ private:
 	int frame = 0;
 	bool cap = true;
 
-	Sint32 m_i_mousePosX = 0, m_i_mousePosY = 0; //mouse position
+	//mouse position
+	Sint32 m_i_mousePosX = 0, m_i_mousePosY = 0;
+
+	//window dimensions
 	int window_width = 1280, window_height = 720;
 
 	SDL_Window* SDL_m_Window = nullptr; //window
 	SDL_Renderer* SDL_m_Renderer = nullptr; //renderer
-	SDL_Surface* SDL_m_surface = nullptr;
+	SDL_Surface* SDL_m_surface = nullptr; //surface
 
 	const uint8_t* m_keyStates = nullptr; //key states
 
@@ -76,6 +85,10 @@ public:
 
 	bool init_all(const char* title, const int xpos, const int ypos,
 		const int width, const int height, const int flags);
+
+	//GLEW
+	bool initGL(); //initializes matrices and clear color
+	void handleKeys(unsigned char key, int x, int y); //input handler
 
 	bool is_running() { return m_b_running; }
 	Sint32 get_mouse_posX() { return m_i_mousePosX; }

@@ -226,7 +226,6 @@ void GameState::handle_state_events()
 {
 	ImGuiIO& io = ImGui::GetIO();
 
-	std::cout << "\n" << ImGui::GetIO().Framerate;
 	io.DeltaTime = Engine::singleton_instance()->get_delta_time();
 	int mouseX = Engine::singleton_instance()->get_mouse_posX(), mouseY = Engine::singleton_instance()->get_mouse_posY();
 	const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
