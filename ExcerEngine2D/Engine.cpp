@@ -90,6 +90,15 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
+	//Create context
+	SDL_GLContext gContext = SDL_GL_CreateContext(SDL_m_Window);
+
+	if (gContext == NULL)
+	{
+		printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
+		m_b_running = false;
+	}
+
 	srand((unsigned)time(NULL)); //set random seed
 
 	m_keyStates = SDL_GetKeyboardState(nullptr);
