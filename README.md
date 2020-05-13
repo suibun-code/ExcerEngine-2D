@@ -1,5 +1,8 @@
 # ExcerEngine2D
- 
+
+ExcerEngine2D is a simple in-development 2D game engine utilizing SDL and OpenGL.
+
+ ---------
 Additional include & library properties in Visual Studio must be set for this to work.
 
 (C/C++ -> General -> Additional Include Directories): 
