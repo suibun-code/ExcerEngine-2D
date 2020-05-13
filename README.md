@@ -1,6 +1,7 @@
 # ExcerEngine2D
 
-ExcerEngine2D is a simple in-development 2D game engine utilizing SDL and OpenGL.
+ExcerEngine2D is a simple in-development 2D game engine utilizing SDL and OpenGL, with user interface utilizing ImGui.
+Currently, it is only available via a demo game.
 
  ---------
 Additional include & library properties in Visual Studio must be set for this to work.
