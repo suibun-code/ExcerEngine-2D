@@ -1,4 +1,4 @@
-# TurboWet
+# ExcerEngine2D
  
 Additional include & library properties in Visual Studio must be set for this to work.
 
