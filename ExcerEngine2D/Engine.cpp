@@ -99,10 +99,10 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		m_b_running = false;
 	}
 
-	if (!initGL())
-	{
-		printf("Unable to initialize OpenGL!\n");
-	}
+	//if (!initGL())
+	//{
+	//	printf("Unable to initialize OpenGL!\n");
+	//}
 
 	srand((unsigned)time(NULL)); //set random seed
 
