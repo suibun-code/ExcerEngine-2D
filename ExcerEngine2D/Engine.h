@@ -28,7 +28,10 @@ private:
 	//engine instance
 	static Engine* instance;
 
-	//GLEW
+	//GLEW / OpenGL
+	void printProgramLog(GLuint program);
+	void printShaderLog(GLuint shader);
+
 	SDL_GLContext gContext; //OpenGL context
 
 	bool gRenderQuad = true; //render flag

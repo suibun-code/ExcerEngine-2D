@@ -98,11 +98,22 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
 		m_b_running = false;
 	}
+	else
+	{
+		//initialize GLEW
+		glewExperimental = true;
+		GLenum glewError = glewInit();
 
-	//if (!initGL())
-	//{
-	//	printf("Unable to initialize OpenGL!\n");
-	//}
+		if (glewError != GLEW_OK)
+		{
+			printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+		}
+	}
+
+	if (!initGL())
+	{
+		printf("Unable to initialize OpenGL!\n");
+	}
 
 	srand((unsigned)time(NULL)); //set random seed
 
@@ -115,6 +126,108 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 	m_b_running = true;
 	return true;
+}
+
+bool Engine::initGL()
+{
+	bool success = true;
+	GLenum error = GL_NO_ERROR;
+
+	//generate program
+	gProgramID = glCreateProgram();
+
+	//create vertex shader
+	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+
+	//get vertex source
+	const GLchar* vertexShaderSource[] =
+	{
+		"#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
+	};
+
+	//set vertex source
+	glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
+
+	//compile vertex source
+	glCompileShader(vertexShader);
+
+	//check vertex shader for errors
+	GLint vShaderCompiled = GL_FALSE;
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderCompiled);
+
+	if (vShaderCompiled != GL_TRUE)
+	{
+		printf("Unable to compile vertex shader %d!\n", vertexShader);
+		//printShaderLog(vertexShader);
+		success = false;
+	}
+	else
+	{
+		//attach vertex shader to program
+		glAttachShader(gProgramID, vertexShader);
+
+		//create fragment shader
+		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+
+		//get fragment source
+		const GLchar* fragmentShaderSource[] =
+		{
+			"#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
+		};
+
+		//set fragment source
+		glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
+
+		//compile fragment source
+		glCompileShader(fragmentShader);
+
+		//check fragment shader for errors
+		GLint fShaderCompiled = GL_FALSE;
+		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled);
+		if (fShaderCompiled != GL_TRUE)
+		{
+			printf("Unable to compile fragment shader %d!\n", fragmentShader);
+			//printShaderLog(fragmentShader);
+			success = false;
+		}
+		else
+		{
+			//attach fragment shader to program
+			glAttachShader(gProgramID, fragmentShader);
+
+			//link program
+			glLinkProgram(gProgramID);
+
+			//check for errors
+			GLint programSuccess = GL_TRUE;
+			glGetProgramiv(gProgramID, GL_LINK_STATUS, &programSuccess);
+			if (programSuccess != GL_TRUE)
+			{
+				printf("Error linking program %d!\n", gProgramID);
+				//printProgramLog(gProgramID);
+				success = false;
+			}
+			else
+			{
+				//get vertex attribute location
+				gVertexPos2DLocation = glGetAttribLocation(gProgramID, "LVertexPos2D");
+				if (gVertexPos2DLocation == -1)
+				{
+					printf("LVertexPos2D is not a valid glsl program variable!\n");
+					success = false;
+				}
+				else
+				{
+					
+				}
+			}
+		}
+	}
+	return success;
+}
+
+void Engine::handleKeys(unsigned char key, int x, int y)
+{
 }
 
 void Engine::wait_for(int time)
