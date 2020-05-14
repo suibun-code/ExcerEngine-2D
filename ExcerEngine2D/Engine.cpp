@@ -12,14 +12,15 @@ Engine::~Engine() {}
 
 bool Engine::init_all(const char* title, const int xpos, const int ypos, const int width, const int height, const int flags)
 {
-	//Use OpenGL 3.1 core
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 1);
+
+		//Use OpenGL 3.1 core
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
 		SDL_m_Window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 
 		if (SDL_m_Window != nullptr)
@@ -90,30 +91,30 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		return false;
 	}
 
-	//Create context
-	gContext = SDL_GL_CreateContext(SDL_m_Window);
+	////Create context
+	//gContext = SDL_GL_CreateContext(SDL_m_Window);
 
-	if (gContext == NULL)
-	{
-		printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
-		m_b_running = false;
-	}
-	else
-	{
-		//initialize GLEW
-		glewExperimental = true;
-		GLenum glewError = glewInit();
+	//if (gContext == NULL)
+	//{
+	//	printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
+	//	m_b_running = false;
+	//}
+	//else
+	//{
+	//	//initialize GLEW
+	//	glewExperimental = true;
+	//	GLenum glewError = glewInit();
 
-		if (glewError != GLEW_OK)
-		{
-			printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
-		}
-	}
+	//	if (glewError != GLEW_OK)
+	//	{
+	//		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+	//	}
+	//}
 
-	if (!initGL())
-	{
-		printf("Unable to initialize OpenGL!\n");
-	}
+	//if (!initGL())
+	//{
+	//	printf("Unable to initialize OpenGL!\n");
+	//}
 
 	srand((unsigned)time(NULL)); //set random seed
 
@@ -130,86 +131,87 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 bool Engine::initGL()
 {
+	//Success flag
 	bool success = true;
-	GLenum error = GL_NO_ERROR;
 
-	//generate program
+	//Generate program
 	gProgramID = glCreateProgram();
 
-	//create vertex shader
+	//Create vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	//get vertex source
+	//Get vertex source
 	const GLchar* vertexShaderSource[] =
 	{
 		"#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
 	};
 
-	//set vertex source
+	//Set vertex source
 	glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
 
-	//compile vertex source
+	//Compile vertex source
 	glCompileShader(vertexShader);
 
-	//check vertex shader for errors
+	//Check vertex shader for errors
 	GLint vShaderCompiled = GL_FALSE;
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderCompiled);
-
 	if (vShaderCompiled != GL_TRUE)
 	{
 		printf("Unable to compile vertex shader %d!\n", vertexShader);
-		//printShaderLog(vertexShader);
+		printShaderLog(vertexShader);
 		success = false;
 	}
 	else
 	{
-		//attach vertex shader to program
+		//Attach vertex shader to program
 		glAttachShader(gProgramID, vertexShader);
 
-		//create fragment shader
+
+		//Create fragment shader
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-		//get fragment source
+		//Get fragment source
 		const GLchar* fragmentShaderSource[] =
 		{
 			"#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
 		};
 
-		//set fragment source
+		//Set fragment source
 		glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
 
-		//compile fragment source
+		//Compile fragment source
 		glCompileShader(fragmentShader);
 
-		//check fragment shader for errors
+		//Check fragment shader for errors
 		GLint fShaderCompiled = GL_FALSE;
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled);
 		if (fShaderCompiled != GL_TRUE)
 		{
 			printf("Unable to compile fragment shader %d!\n", fragmentShader);
-			//printShaderLog(fragmentShader);
+			printShaderLog(fragmentShader);
 			success = false;
 		}
 		else
 		{
-			//attach fragment shader to program
+			//Attach fragment shader to program
 			glAttachShader(gProgramID, fragmentShader);
 
-			//link program
+
+			//Link program
 			glLinkProgram(gProgramID);
 
-			//check for errors
+			//Check for errors
 			GLint programSuccess = GL_TRUE;
 			glGetProgramiv(gProgramID, GL_LINK_STATUS, &programSuccess);
 			if (programSuccess != GL_TRUE)
 			{
 				printf("Error linking program %d!\n", gProgramID);
-				//printProgramLog(gProgramID);
+				printProgramLog(gProgramID);
 				success = false;
 			}
 			else
 			{
-				//get vertex attribute location
+				//Get vertex attribute location
 				gVertexPos2DLocation = glGetAttribLocation(gProgramID, "LVertexPos2D");
 				if (gVertexPos2DLocation == -1)
 				{
@@ -218,12 +220,100 @@ bool Engine::initGL()
 				}
 				else
 				{
-					
+					//Initialize clear color
+					glClearColor(0.f, 0.f, 0.f, 1.f);
+
+					//VBO data
+					GLfloat vertexData[] =
+					{
+						-0.2f, -0.5f,
+						 0.5f, -0.5f,
+						 0.5f,  0.5f,
+						-0.5f,  0.5f
+					};
+
+					//IBO data
+					GLuint indexData[] = { 0, 1, 2, 3 };
+
+					//Create VBO
+					glGenBuffers(1, &gVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+					glBufferData(GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW);
+
+					//Create IBO
+					glGenBuffers(1, &gIBO);
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW);
 				}
 			}
 		}
 	}
+
 	return success;
+}
+
+void Engine::printProgramLog(GLuint program)
+{
+	//Make sure name is shader
+	if (glIsProgram(program))
+	{
+		//Program log length
+		int infoLogLength = 0;
+		int maxLength = infoLogLength;
+
+		//Get info string length
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//Allocate string
+		char* infoLog = new char[maxLength];
+
+		//Get info log
+		glGetProgramInfoLog(program, maxLength, &infoLogLength, infoLog);
+		if (infoLogLength > 0)
+		{
+			//Print Log
+			printf("%s\n", infoLog);
+		}
+
+		//Deallocate string
+		delete[] infoLog;
+	}
+	else
+	{
+		printf("Name %d is not a program\n", program);
+	}
+}
+
+void Engine::printShaderLog(GLuint shader)
+{
+	//Make sure name is shader
+	if (glIsShader(shader))
+	{
+		//Shader log length
+		int infoLogLength = 0;
+		int maxLength = infoLogLength;
+
+		//Get info string length
+		glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &maxLength);
+
+		//Allocate string
+		char* infoLog = new char[maxLength];
+
+		//Get info log
+		glGetShaderInfoLog(shader, maxLength, &infoLogLength, infoLog);
+		if (infoLogLength > 0)
+		{
+			//Print Log
+			printf("%s\n", infoLog);
+		}
+
+		//Deallocate string
+		delete[] infoLog;
+	}
+	else
+	{
+		printf("Name %d is not a shader\n", shader);
+	}
 }
 
 void Engine::handleKeys(unsigned char key, int x, int y)
@@ -257,17 +347,16 @@ bool Engine::tick()
 	deltaTime = deltaTime = ((currentTime - lastTime) * 1000 / (float)SDL_GetPerformanceFrequency());
 	framesPerSecond = 1000 / deltaTime;
 
-	//auto duration = std::chrono::steady_clock::now().time_since_epoch();
-	//auto count = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
-	//m_tick = 1000000 / FPS;
-	//if (count % m_tick < 325) // Margin of error for modulus.
-	//{
-	//	if (m_b_gotTick == false) // Drops potential duplicate frames.
-	//		m_b_gotTick = true;
-	//}
-	//else m_b_gotTick = false;
+	auto duration = std::chrono::steady_clock::now().time_since_epoch();
+	auto count = std::chrono::duration_cast<std::chrono::microseconds>(duration).count();
+	m_tick = 1000000 / FPS;
+	if (count % m_tick < 325) // Margin of error for modulus.
+	{
+		if (m_b_gotTick == false) // Drops potential duplicate frames.
+			m_b_gotTick = true;
+	}
+	else m_b_gotTick = false;
 
-	m_b_gotTick = true;
 	return m_b_gotTick;
 }
 
@@ -279,6 +368,33 @@ void Engine::update(float deltaTime)
 void Engine::render()
 {
 	m_p_FSM->render();
+
+	////Clear color buffer
+	//glClear(GL_COLOR_BUFFER_BIT);
+
+	////Render quad
+	//if (gRenderQuad)
+	//{
+	//	//Bind program
+	//	glUseProgram(gProgramID);
+
+	//	//Enable vertex position
+	//	glEnableVertexAttribArray(gVertexPos2DLocation);
+
+	//	//Set vertex data
+	//	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+	//	glVertexAttribPointer(gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
+
+	//	//Set index data and render
+	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
+	//	glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+
+	//	//Disable vertex position
+	//	glDisableVertexAttribArray(gVertexPos2DLocation);
+
+	//	//Unbind program
+	//	glUseProgram(NULL);
+	//}
 }
 
 void Engine::handle_events()
@@ -347,8 +463,13 @@ void Engine::clean()
 	//cleanup ImGui
 	ImGui::DestroyContext();
 
+	//deallocate program
+	glDeleteProgram(gProgramID);
+
 	SDL_DestroyRenderer(SDL_m_Renderer);
 	SDL_DestroyWindow(SDL_m_Window);
+	SDL_m_Window = NULL;
+	SDL_m_Renderer = NULL;
 	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();

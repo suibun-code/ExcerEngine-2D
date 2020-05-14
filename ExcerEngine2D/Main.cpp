@@ -8,11 +8,13 @@ int main(int argc, char* args[])
 
 	while (Engine::singleton_instance()->is_running())
 	{
+		SDL_PumpEvents();
 		Engine::singleton_instance()->handle_events();
 		if (Engine::singleton_instance()->tick())
 		{
 			Engine::singleton_instance()->update(Engine::singleton_instance()->get_delta_time());
 			Engine::singleton_instance()->render();
+			SDL_GL_SwapWindow(Engine::singleton_instance()->get_window());
 		}
 	}
 

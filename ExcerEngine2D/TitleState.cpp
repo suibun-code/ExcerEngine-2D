@@ -19,7 +19,7 @@ void TitleState::clean_vector(std::vector<T> vec)
 //TitleState
 void TitleState::enter()
 {
-	SDL_SetRenderDrawColor(Engine::singleton_instance()->get_renderer(),80, 0, 80, 255);
+	SDL_SetRenderDrawColor(Engine::singleton_instance()->get_renderer(), 80, 0, 80, 255);
 
 	//IMAGES
 	m_v_images.push_back(new Image("res/img/turbowetlogo3.png", { 0, 0, 512, 288 }, { 25, 25, 512, 288 }));

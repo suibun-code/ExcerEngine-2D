@@ -89,8 +89,6 @@ void StateMachine::pop_state()
 		m_v_states.pop_back();
 	}
 	m_v_states.back()->resume();
-
-	std::cout << "popped";
 }
 
 void StateMachine::clean()

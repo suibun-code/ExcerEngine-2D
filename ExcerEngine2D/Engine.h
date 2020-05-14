@@ -29,9 +29,6 @@ private:
 	static Engine* instance;
 
 	//GLEW / OpenGL
-	void printProgramLog(GLuint program);
-	void printShaderLog(GLuint shader);
-
 	SDL_GLContext gContext; //OpenGL context
 
 	bool gRenderQuad = true; //render flag
@@ -91,6 +88,8 @@ public:
 
 	//GLEW
 	bool initGL(); //initializes matrices and clear color
+	void printProgramLog(GLuint program);
+	void printShaderLog(GLuint shader);
 	void handleKeys(unsigned char key, int x, int y); //input handler
 
 	bool is_running() { return m_b_running; }
