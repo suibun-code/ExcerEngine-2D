@@ -2,6 +2,9 @@
 
 #define FPS 144
 
+#include <fstream>
+#include <iostream>
+
 //SDL
 #include "SDL.h"
 #include "SDL_image.h"
@@ -35,8 +38,10 @@ private:
 
 	GLuint gProgramID = 0;
 	GLint gVertexPos2DLocation = -1;
+	GLuint gVAO = 0;
 	GLuint gVBO = 0;
 	GLuint gIBO = 0;
+	GLuint cVBO = 0;
 
 	//boolean checks
 	bool m_b_running = false;
@@ -82,6 +87,11 @@ public:
 
 	Engine();
 	~Engine();
+
+	//TEST FUNCTIONS
+	unsigned long getFileLength(std::ifstream& file);
+	int loadShader(char* filename, GLchar** ShaderSource, unsigned long* len);
+	int unloadShader(GLubyte** ShaderSource);
 
 	bool init_all(const char* title, const int xpos, const int ypos,
 		const int width, const int height, const int flags);

@@ -18,6 +18,9 @@
     <Filter Include="States">
       <UniqueIdentifier>{0f616064-a6be-439d-8ed4-abd031d92f32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="shaders">
+      <UniqueIdentifier>{9a622089-0137-4d52-bb01-b01b2d94ad69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -139,5 +142,13 @@
     <ClInclude Include="GameState.h">
       <Filter>States</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fragmentShader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="vertexShader.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

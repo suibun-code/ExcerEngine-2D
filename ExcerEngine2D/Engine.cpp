@@ -10,6 +10,58 @@ Engine* Engine::instance = nullptr;
 Engine::Engine() {}
 Engine::~Engine() {}
 
+//unsigned long Engine::getFileLength(std::ifstream& file)
+//{
+//	if (!file.good()) return 0;
+//
+//	unsigned long pos = file.tellg();
+//	file.seekg(0, std::ios::end);
+//
+//	unsigned long len = file.tellg();
+//	file.seekg(std::ios::beg);
+//
+//	return len;
+//}
+//
+//int Engine::loadShader(char* filename, GLchar** ShaderSource, unsigned long* len)
+//{
+//	std::ifstream file;
+//	file.open(filename, std::ios::in); // opens as ASCII!
+//	if (!file) return -1;
+//
+//	len = getFileLength(file);
+//
+//	if (len == 0) return -2;   // Error: Empty File 
+//
+//	*ShaderSource = (GLubyte*) new char[len + 1];
+//	if (*ShaderSource == 0) return -3;   // can't reserve memory
+//
+//	 // len isn't always strlen cause some characters are stripped in ascii read...
+//	 // it is important to 0-terminate the real length later, len is just max possible value... 
+//	*ShaderSource[len] = 0;
+//
+//	unsigned int i = 0;
+//	while (file.good())
+//	{
+//		*ShaderSource[i] = file.get();       // get character from file.
+//		if (!file.eof())
+//			i++;
+//	}
+//
+//	*ShaderSource[i] = 0;  // 0-terminate it at the correct position
+//
+//	file.close();
+//
+//	return 0; // No Error
+//}
+//
+//int Engine::unloadShader(GLubyte** ShaderSource)
+//{
+//	if (*ShaderSource != 0)
+//		delete[] * ShaderSource;
+//	*ShaderSource = 0;
+//}
+
 bool Engine::init_all(const char* title, const int xpos, const int ypos, const int width, const int height, const int flags)
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
@@ -18,7 +70,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 		//Use OpenGL 3.1 core
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		SDL_m_Window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
@@ -91,30 +143,30 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		return false;
 	}
 
-	////Create context
-	//gContext = SDL_GL_CreateContext(SDL_m_Window);
+	//Create context
+	gContext = SDL_GL_CreateContext(SDL_m_Window);
 
-	//if (gContext == NULL)
-	//{
-	//	printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
-	//	m_b_running = false;
-	//}
-	//else
-	//{
-	//	//initialize GLEW
-	//	glewExperimental = true;
-	//	GLenum glewError = glewInit();
+	if (gContext == NULL)
+	{
+		printf("OpenGL context failed to be created. SDL Error: %s\n", SDL_GetError());
+		m_b_running = false;
+	}
+	else
+	{
+		//initialize GLEW
+		glewExperimental = true;
+		GLenum glewError = glewInit();
 
-	//	if (glewError != GLEW_OK)
-	//	{
-	//		printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
-	//	}
-	//}
+		if (glewError != GLEW_OK)
+		{
+			printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+		}
+	}
 
-	//if (!initGL())
-	//{
-	//	printf("Unable to initialize OpenGL!\n");
-	//}
+	if (!initGL())
+	{
+		printf("Unable to initialize OpenGL!\n");
+	}
 
 	srand((unsigned)time(NULL)); //set random seed
 
@@ -131,28 +183,46 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 bool Engine::initGL()
 {
-	//Success flag
+	//vertex shader
+	const char* vertexSource = R"glsl(
+    #version 150 core
+
+    in vec2 position;
+
+    void main()
+    {
+        gl_Position = vec4(position, 0.0, 1.0);
+    }
+)glsl";
+
+	//fragment shader
+	const char* fragmentSource = R"glsl(
+	#version 150 core
+
+	out vec4 outColor;
+
+	void main()
+	{
+		outColor = vec4(1.0, 1.0, 1.0, 1.0);
+	}	
+)glsl";
+
+	//success flag
 	bool success = true;
 
-	//Generate program
+	//generate program
 	gProgramID = glCreateProgram();
 
-	//Create vertex shader
+	//create vertex shader
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
-	//Get vertex source
-	const GLchar* vertexShaderSource[] =
-	{
-		"#version 140\nin vec2 LVertexPos2D; void main() { gl_Position = vec4( LVertexPos2D.x, LVertexPos2D.y, 0, 1 ); }"
-	};
+	//set vertex source
+	glShaderSource(vertexShader, 1, &vertexSource, NULL);
 
-	//Set vertex source
-	glShaderSource(vertexShader, 1, vertexShaderSource, NULL);
-
-	//Compile vertex source
+	//compile vertex source
 	glCompileShader(vertexShader);
 
-	//Check vertex shader for errors
+	//check vertex shader for errors
 	GLint vShaderCompiled = GL_FALSE;
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &vShaderCompiled);
 	if (vShaderCompiled != GL_TRUE)
@@ -163,26 +233,19 @@ bool Engine::initGL()
 	}
 	else
 	{
-		//Attach vertex shader to program
+		//attach vertex shader to program
 		glAttachShader(gProgramID, vertexShader);
 
-
-		//Create fragment shader
+		//create fragment shader
 		GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 
-		//Get fragment source
-		const GLchar* fragmentShaderSource[] =
-		{
-			"#version 140\nout vec4 LFragment; void main() { LFragment = vec4( 1.0, 1.0, 1.0, 1.0 ); }"
-		};
+		//set fragment source
+		glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
 
-		//Set fragment source
-		glShaderSource(fragmentShader, 1, fragmentShaderSource, NULL);
-
-		//Compile fragment source
+		//compile fragment source
 		glCompileShader(fragmentShader);
 
-		//Check fragment shader for errors
+		//check fragment shader for errors
 		GLint fShaderCompiled = GL_FALSE;
 		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &fShaderCompiled);
 		if (fShaderCompiled != GL_TRUE)
@@ -193,14 +256,13 @@ bool Engine::initGL()
 		}
 		else
 		{
-			//Attach fragment shader to program
+			//attach fragment shader to program
 			glAttachShader(gProgramID, fragmentShader);
 
-
-			//Link program
+			//link program
 			glLinkProgram(gProgramID);
 
-			//Check for errors
+			//check for errors
 			GLint programSuccess = GL_TRUE;
 			glGetProgramiv(gProgramID, GL_LINK_STATUS, &programSuccess);
 			if (programSuccess != GL_TRUE)
@@ -211,8 +273,8 @@ bool Engine::initGL()
 			}
 			else
 			{
-				//Get vertex attribute location
-				gVertexPos2DLocation = glGetAttribLocation(gProgramID, "LVertexPos2D");
+				//get vertex attribute location
+				gVertexPos2DLocation = glGetAttribLocation(gProgramID, "position");
 				if (gVertexPos2DLocation == -1)
 				{
 					printf("LVertexPos2D is not a valid glsl program variable!\n");
@@ -220,30 +282,66 @@ bool Engine::initGL()
 				}
 				else
 				{
-					//Initialize clear color
-					glClearColor(0.f, 0.f, 0.f, 1.f);
+					//initialize clear color
+					glClearColor(0.f, 0.f, 1.f, 1.f);
+
+					GLint posAttrib = glGetAttribLocation(gProgramID, "position");
+
+					//IBO data
+					GLuint indexData[] =
+					{
+						0, 1, 2, 3
+					};
 
 					//VBO data
 					GLfloat vertexData[] =
 					{
-						-0.2f, -0.5f,
+						-0.5f, -0.5f,
 						 0.5f, -0.5f,
 						 0.5f,  0.5f,
 						-0.5f,  0.5f
 					};
 
-					//IBO data
-					GLuint indexData[] = { 0, 1, 2, 3 };
+					GLfloat colorData[] =
+					{
+						1.f, 1.f, 1.f, 1.f,
+						0.f, 1.f, 0.f, 1.f,
+						1.f, 0.f, 0.f, 1.f,
+						0.f, 0.f, 1.f, 1.f
+					};
 
-					//Create VBO
-					glGenBuffers(1, &gVBO);
-					glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-					glBufferData(GL_ARRAY_BUFFER, 2 * 4 * sizeof(GLfloat), vertexData, GL_STATIC_DRAW);
+					//create and bind VAO
+					gVAO = 0;
+					glGenVertexArrays(1, &gVAO);
+					glBindVertexArray(gVAO);
 
-					//Create IBO
+					//create IBO
+					gIBO = 0;
 					glGenBuffers(1, &gIBO);
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
-					glBufferData(GL_ELEMENT_ARRAY_BUFFER, 4 * sizeof(GLuint), indexData, GL_STATIC_DRAW);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData), indexData, GL_STATIC_DRAW);
+
+					//create VBO
+					gVBO = 0;
+					glGenBuffers(1, &gVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+					glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
+					glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+					glEnableVertexAttribArray(0);
+
+					//cVBO = 0;
+					//glGenBuffers(1, &cVBO);
+					//glBindBuffer(GL_ARRAY_BUFFER, cVBO);
+					//glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
+					//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
+					//glEnableVertexAttribArray(1);
+
+					//set vertex data
+					glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+					glBindBuffer(GL_ARRAY_BUFFER, gIBO);
+
+					//unbind VAO
+					glBindVertexArray(NULL);
 				}
 			}
 		}
@@ -367,34 +465,39 @@ void Engine::update(float deltaTime)
 
 void Engine::render()
 {
-	m_p_FSM->render();
+	//m_p_FSM->render();
 
-	////Clear color buffer
-	//glClear(GL_COLOR_BUFFER_BIT);
+	//clear color buffer
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	////Render quad
-	//if (gRenderQuad)
-	//{
-	//	//Bind program
-	//	glUseProgram(gProgramID);
+	//render quad
+	if (gRenderQuad)
+	{
+		//bind program
+		glUseProgram(gProgramID);
 
-	//	//Enable vertex position
-	//	glEnableVertexAttribArray(gVertexPos2DLocation);
+		//enable vertex position
+		glEnableVertexAttribArray(gVertexPos2DLocation);
 
-	//	//Set vertex data
-	//	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	//	glVertexAttribPointer(gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
+		//set vertex data
+		//glBindBuffer(GL_ARRAY_BUFFER, gVBO);
+		//glVertexAttribPointer(gVertexPos2DLocation, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), NULL);
 
-	//	//Set index data and render
-	//	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
-	//	glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+		//set index data
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO);
 
-	//	//Disable vertex position
-	//	glDisableVertexAttribArray(gVertexPos2DLocation);
+		//set array data
+		glBindVertexArray(gVAO);
 
-	//	//Unbind program
-	//	glUseProgram(NULL);
-	//}
+		//render
+		glDrawElements(GL_TRIANGLE_FAN, 4, GL_UNSIGNED_INT, NULL);
+
+		//disable vertex position
+		glDisableVertexAttribArray(gVertexPos2DLocation);
+
+		//unbind program
+		glUseProgram(NULL);
+	}
 }
 
 void Engine::handle_events()
