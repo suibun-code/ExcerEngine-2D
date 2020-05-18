@@ -1,17 +1,5 @@
 #include "SettingsState.h"
 
-template<class T>
-void SettingsState::clean_vector(std::vector<T> vec)
-{
-	for (int i = 0; i < (int)vec.size(); i++)
-	{
-		delete vec[i];
-		vec[i] = nullptr;
-	}
-	vec.clear();
-	vec.shrink_to_fit();
-}
-
 void SettingsState::enter()
 {
 	//if (!Engine::singleton_instance()->get_AM()->is_paused())

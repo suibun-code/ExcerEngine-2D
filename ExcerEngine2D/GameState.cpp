@@ -1,18 +1,6 @@
 #include "GameState.h"
 #include "TitleState.h"
 
-template<class T>
-void GameState::clean_vector(std::vector<T> vec)
-{
-	for (int i = 0; i < (int)vec.size(); i++)
-	{
-		delete vec[i];
-		vec[i] = nullptr;
-	}
-	vec.clear();
-	vec.shrink_to_fit();
-}
-
 void GameState::m_ImGuiKeyMap()
 {
 	ImGuiIO& io = ImGui::GetIO();

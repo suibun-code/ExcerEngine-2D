@@ -157,6 +157,8 @@
     <ClCompile Include="MappingState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SettingsState.cpp" />
+    <ClCompile Include="ShaderUtil.cpp" />
+    <ClCompile Include="SplashState.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="TitleState.cpp" />
   </ItemGroup>
@@ -179,6 +181,8 @@
     <ClInclude Include="MappingState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SettingsState.h" />
+    <ClInclude Include="ShaderUtil.h" />
+    <ClInclude Include="SplashState.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="TitleState.h" />
   </ItemGroup>

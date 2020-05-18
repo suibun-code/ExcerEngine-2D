@@ -32,7 +32,7 @@ private:
 	static Engine* instance;
 
 	//GLEW / OpenGL
-	SDL_GLContext gContext; //OpenGL context
+	SDL_GLContext gContext = NULL; //OpenGL context
 
 	bool gRenderQuad = true; //render flag
 
@@ -87,11 +87,6 @@ public:
 
 	Engine();
 	~Engine();
-
-	//TEST FUNCTIONS
-	unsigned long getFileLength(std::ifstream& file);
-	int loadShader(char* filename, GLchar** ShaderSource, unsigned long* len);
-	int unloadShader(GLubyte** ShaderSource);
 
 	bool init_all(const char* title, const int xpos, const int ypos,
 		const int width, const int height, const int flags);

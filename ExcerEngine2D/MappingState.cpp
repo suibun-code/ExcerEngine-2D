@@ -1,18 +1,6 @@
 #include "MappingState.h"
 #include "TitleState.h"
 
-template<class T>
-void MappingState::clean_vector(std::vector<T> vec)
-{
-	for (int i = 0; i < (int)vec.size(); i++)
-	{
-		delete vec[i];
-		vec[i] = nullptr;
-	}
-	vec.clear();
-	vec.shrink_to_fit();
-}
-
 void MappingState::enter()
 {
 	SDL_SetRenderDrawColor(Engine::singleton_instance()->get_renderer(), 128, 128, 128, 255);
