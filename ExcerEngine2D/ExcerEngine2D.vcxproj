@@ -155,6 +155,7 @@
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MappingState.cpp" />
+    <ClCompile Include="OGLSprite.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SettingsState.cpp" />
     <ClCompile Include="ShaderUtil.cpp" />
@@ -179,6 +180,7 @@
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="MappingState.h" />
+    <ClInclude Include="OGLSprite.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="ShaderUtil.h" />
@@ -187,17 +189,11 @@
     <ClInclude Include="TitleState.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\fragmentShader.frag">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </None>
     <None Include="shaders\fs.shader">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </None>
-    <None Include="shaders\vertexShader.vert">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </None>
     <None Include="shaders\vs.shader">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

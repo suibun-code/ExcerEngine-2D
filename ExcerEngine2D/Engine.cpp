@@ -132,16 +132,21 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 bool Engine::initGL()
 {
-	//load shaders
+	//load program
 	shaderUtil.load_shaders("shaders/vs.shader", "shaders/fs.shader");
+	//bind program
+	shaderUtil.use_shaders();
 
 	//get vertex attribute location
 	gVertexPos2DLocation = glGetAttribLocation(shaderUtil.get_shaders(), "position");
 
 	//clear to this color
-	glClearColor(0.f, 0.f, 1.f, 1.f);
+	glClearColor(1.f, 1.f, 1.f, 1.f);
 
 	GLint posAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "position");
+	GLint uniColor = glGetUniformLocation(shaderUtil.get_shaders(), "triangleColor");
+	glUniform3f(uniColor, 0.5f, 0.0f, 0.5f);
+
 
 	//IBO data
 	GLuint indexData[] =
@@ -153,7 +158,7 @@ bool Engine::initGL()
 	//VBO data
 	GLfloat vertexData[] =
 	{
-		-0.9f, -0.5f, //bottom left
+		-0.5f, -0.5f, //bottom left
 		 0.5f, -0.5f, //bottom right
 		 0.5f,  0.5f, //top right
 		-0.5f,  0.5f  //top left
@@ -184,7 +189,7 @@ bool Engine::initGL()
 	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData), vertexData, GL_STATIC_DRAW);
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(posAttrib);
 
 	//cVBO = 0;
 	//glGenBuffers(1, &cVBO);
@@ -324,7 +329,7 @@ void Engine::render()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	//bind program
-	shaderUtil.use_shaders();
+	//shaderUtil.use_shaders();
 
 	//enable vertex position
 	glEnableVertexAttribArray(gVertexPos2DLocation);
@@ -339,7 +344,7 @@ void Engine::render()
 	glDisableVertexAttribArray(gVertexPos2DLocation);
 
 	//unbind program
-	glUseProgram(NULL);
+	//glUseProgram(NULL);
 }
 
 void Engine::handle_events()

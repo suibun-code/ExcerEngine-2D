@@ -86,6 +86,9 @@
     <ClCompile Include="ShaderUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="OGLSprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -154,14 +157,11 @@
     <ClInclude Include="ShaderUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="OGLSprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shaders\vertexShader.vert">
-      <Filter>shaders</Filter>
-    </None>
-    <None Include="shaders\fragmentShader.frag">
-      <Filter>shaders</Filter>
-    </None>
     <None Include="shaders\fs.shader">
       <Filter>shaders</Filter>
     </None>
