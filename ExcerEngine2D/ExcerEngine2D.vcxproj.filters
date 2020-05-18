@@ -156,10 +156,16 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="fragmentShader.frag">
+    <None Include="shaders\vertexShader.vert">
       <Filter>shaders</Filter>
     </None>
-    <None Include="vertexShader.vert">
+    <None Include="shaders\fragmentShader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\fs.shader">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shaders\vs.shader">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

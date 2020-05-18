@@ -3,26 +3,28 @@
 #include "glew.h"
 
 #include <string>
-#include <fstream>
 
 class ShaderUtil
 {
 private:
-	GLuint gProgramID;
-	GLuint GetCompiledShader(GLuint shader_type, const std::string& shader_source);
+	unsigned int gProgramID;
+	unsigned int get_compiled_shader(unsigned int shader_type, const std::string& shader_source);
 
 public:
-	ShaderUtil();
-	~ShaderUtil();
+	ShaderUtil() {}
+	~ShaderUtil() {}
 
 	//load vertex and fragment shader from file
-	bool Load(const std::string& vertexShaderFile, const std::string& fragmentShaderFile);
+	bool load_shaders(const std::string& vertexShaderFile, const std::string& fragmentShaderFile);
 
 	//use program
-	void Use();
+	void use_shaders();
+
+	//get program
+	GLuint get_shaders();
 
 	//delete program
-	void Delete();
+	void delete_shaders();
 
 };
 

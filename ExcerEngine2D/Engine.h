@@ -24,6 +24,7 @@
 #include "FSM.h"
 #include "ConsoleIO.h"
 #include "AudioManager.h"
+#include "ShaderUtil.h"
 
 class Engine
 {
@@ -32,9 +33,8 @@ private:
 	static Engine* instance;
 
 	//GLEW / OpenGL
+	ShaderUtil shaderUtil;
 	SDL_GLContext gContext = NULL; //OpenGL context
-
-	bool gRenderQuad = true; //render flag
 
 	GLuint gProgramID = 0;
 	GLint gVertexPos2DLocation = -1;
