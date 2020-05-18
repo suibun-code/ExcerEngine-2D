@@ -36,9 +36,9 @@ private:
 	ShaderUtil shaderUtil;
 	SDL_GLContext gContext = NULL; //OpenGL context
 
-	GLuint gProgramID = 0;
 	GLint gVertexPos2DLocation = -1;
 	GLuint gVAO = 0;
+	GLuint gVAO2 = 0;
 	GLuint gVBO = 0;
 	GLuint gIBO = 0;
 	GLuint cVBO = 0;

@@ -132,6 +132,8 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 bool Engine::initGL()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//load program
 	shaderUtil.load_shaders("shaders/vs.shader", "shaders/fs.shader");
 	//bind program
@@ -141,12 +143,60 @@ bool Engine::initGL()
 	gVertexPos2DLocation = glGetAttribLocation(shaderUtil.get_shaders(), "position");
 
 	//clear to this color
-	glClearColor(1.f, 1.f, 1.f, 1.f);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.f);
 
 	GLint posAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "position");
-	GLint uniColor = glGetUniformLocation(shaderUtil.get_shaders(), "triangleColor");
-	glUniform3f(uniColor, 0.5f, 0.0f, 0.5f);
+	GLint colAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "color");
+	GLint monoAlpha = glGetUniformLocation(shaderUtil.get_shaders(), "alpha");
+	glUniform1f(monoAlpha, 0.1f);
 
+	//test
+	GLuint indexData2[] =
+	{
+		0, 1, 2,
+		2, 3, 0
+	};
+
+	GLfloat vertexData2[] =
+	{
+		-0.75f, -0.25f, //bottom left
+		 0.25f, -0.25f, //bottom right
+		 0.25f,  0.75f, //top right
+		-0.75f,  0.75f  //top left
+	};
+
+	GLfloat colorData2[] =
+	{
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f,
+		0.f, 0.f, 1.f
+	};
+
+	gVAO2 = 0;
+	glGenVertexArrays(1, &gVAO2);
+	glBindVertexArray(gVAO2);
+
+	GLuint gIBO2 = 0;
+	glGenBuffers(1, &gIBO2);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gIBO2);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indexData2), indexData2, GL_STATIC_DRAW);
+
+	GLuint gVBO2 = 0;
+	glGenBuffers(1, &gVBO2);
+	glBindBuffer(GL_ARRAY_BUFFER, gVBO2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertexData2), vertexData2, GL_STATIC_DRAW);
+	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(posAttrib);
+
+	GLuint cVBO2 = 0;
+	glGenBuffers(1, &cVBO2);
+	glBindBuffer(GL_ARRAY_BUFFER, cVBO2);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colorData2), colorData2, GL_STATIC_DRAW);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colAttrib);
+
+	//***********************************************************************
 
 	//IBO data
 	GLuint indexData[] =
@@ -158,18 +208,18 @@ bool Engine::initGL()
 	//VBO data
 	GLfloat vertexData[] =
 	{
-		-0.5f, -0.5f, //bottom left
-		 0.5f, -0.5f, //bottom right
-		 0.5f,  0.5f, //top right
-		-0.5f,  0.5f  //top left
+		-0.25f, -0.75f, //bottom left
+		 0.75f, -0.75f, //bottom right
+		 0.75f,  0.25f, //top right
+		-0.25f,  0.25f  //top left
 	};
 
 	GLfloat colorData[] =
 	{
-		1.f, 1.f, 1.f, 1.f, //bottom left
-		0.f, 1.f, 0.f, 1.f,
-		1.f, 0.f, 0.f, 1.f,
-		0.f, 0.f, 1.f, 1.f
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f,
+		1.f, 0.f, 0.f
 	};
 
 	//create and bind VAO
@@ -191,16 +241,15 @@ bool Engine::initGL()
 	glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(posAttrib);
 
-	//cVBO = 0;
-	//glGenBuffers(1, &cVBO);
-	//glBindBuffer(GL_ARRAY_BUFFER, cVBO);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
-	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-	//glEnableVertexAttribArray(1);
+	cVBO = 0;
+	glGenBuffers(1, &cVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, cVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(colorData), colorData, GL_STATIC_DRAW);
+	glVertexAttribPointer(colAttrib, 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glEnableVertexAttribArray(colAttrib);
 
-	//set vertex data
-	glBindBuffer(GL_ARRAY_BUFFER, gVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, gIBO);
+	glBindBuffer(GL_ARRAY_BUFFER, 0); // Can optionally unbind the buffer to avoid modification.
+	glBindVertexArray(0); // Can optionally unbind the vertex array to avoid modification.
 
 	//unbind VAO
 	glBindVertexArray(NULL);
@@ -340,6 +389,12 @@ void Engine::render()
 	//render
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
+	//set array data
+	glBindVertexArray(gVAO2);
+
+	//render
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
 	//disable vertex position
 	glDisableVertexAttribArray(gVertexPos2DLocation);
 
@@ -414,7 +469,7 @@ void Engine::clean()
 	ImGui::DestroyContext();
 
 	//deallocate program
-	glDeleteProgram(gProgramID);
+	shaderUtil.delete_shaders();
 
 	SDL_DestroyRenderer(SDL_m_Renderer);
 	SDL_DestroyWindow(SDL_m_Window);
