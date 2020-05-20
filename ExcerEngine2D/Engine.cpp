@@ -206,7 +206,7 @@ bool Engine::initGL()
 	gVertexPos2DLocation = glGetAttribLocation(shaderUtil.get_shaders(), "position");
 
 	//clear to this color
-	glClearColor(0.5f, 0.5f, 0.5f, 1.f);
+	glClearColor(.5f, .5f, .5f, 1.f);
 
 	GLint posAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "position");
 	GLint colAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "color");
@@ -214,17 +214,17 @@ bool Engine::initGL()
 	GLint texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord");
 	glUniform1f(monoAlpha, .5f);
 
-	SDL_Surface* testSurface = IMG_Load("res/img/sample.png");
+	SDL_Surface* testSurface = IMG_Load("res/img/VIDEOGAME.png");
 
 	glGenTextures(1, &tex); // generate texture
 	glBindTexture(GL_TEXTURE_2D, tex); //bind texture
 
-	int Mode = GL_RGB;
+	int mode = GL_RGB;
 
 	if (testSurface->format->BytesPerPixel == 4) {
-		Mode = GL_RGBA;
+		mode = GL_RGBA;
 	}
-	glTexImage2D(GL_TEXTURE_2D, 0, Mode, testSurface->w, testSurface->h, 0, Mode, GL_UNSIGNED_BYTE, testSurface->pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, mode, testSurface->w, testSurface->h, 0, mode, GL_UNSIGNED_BYTE, testSurface->pixels);
 	SDL_FreeSurface(testSurface);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); //wrapping repeat on X
@@ -232,8 +232,8 @@ bool Engine::initGL()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //interpolation method for scaling down
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //interpolation method for scaling up
 
-	float borderColor[] = { 1.f, 1.f, 1.f, 1.f }; //border color if clamping to border
-	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); //set the border color
+	//float borderColor[] = { 1.f, 1.f, 1.f, 1.f }; //border color if clamping to border
+	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); //set the border color
 
 	glGenerateMipmap(GL_TEXTURE_2D); //generate mipmap
 
