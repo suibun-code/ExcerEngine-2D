@@ -1,2 +1,27 @@
-﻿  Engine.cpp
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppClean.targets(76,5): warning : Access to the path 'c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\debug\excerengine2d.exe' is denied.
+  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_widgets.cpp
+  imgui_sdl.cpp
+  AudioManager.cpp
+  Button.cpp
+  ButtonToggle.cpp
+  ConsoleIO.cpp
+  Engine.cpp
+  FSM.cpp
+  GameState.cpp
+  Image.cpp
+  Main.cpp
+  MappingState.cpp
+  OGLSprite.cpp
+  Player.cpp
+  SettingsState.cpp
+  ShaderUtil.cpp
+  SplashState.cpp
+  Generating Code...
+  Compiling...
+  Sprite.cpp
+  TitleState.cpp
+  Generating Code...
   ExcerEngine2D.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\Debug\ExcerEngine2D.exe
