@@ -1,10 +1,10 @@
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\vc142.pdb
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\vc142.idb
-c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\sprite.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\splashstate.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\shaderutil.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\settingsstate.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\player.obj
+c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\oglsprite.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\mappingstate.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\main.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\image.obj
@@ -21,7 +21,7 @@ c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\imgui_demo.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\imgui.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\titlestate.obj
-c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\oglsprite.obj
+c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\excerengine2d\debug\sprite.obj
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\debug\excerengine2d.exe
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\debug\excerengine2d.ilk
 c:\users\joopi\onedrive\desktop\code\personal\excerengine2d\debug\excerengine2d.pdb

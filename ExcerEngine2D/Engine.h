@@ -42,6 +42,8 @@ private:
 	GLuint gVBO = 0;
 	GLuint gIBO = 0;
 	GLuint cVBO = 0;
+	GLuint tVBO = 0;
+	GLuint tex = 0;
 
 	//boolean checks
 	bool m_b_running = false;
