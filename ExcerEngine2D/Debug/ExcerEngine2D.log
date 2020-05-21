@@ -1,15 +1,6 @@
-﻿  Button.cpp
-  ButtonToggle.cpp
-  Engine.cpp
-  FSM.cpp
-  GameInstance.cpp
+﻿  Engine.cpp
   GameState.cpp
-  Image.cpp
-  Main.cpp
   MappingState.cpp
-  OpenGLTestState.cpp
-  SettingsState.cpp
-  SplashState.cpp
   TitleState.cpp
   Generating Code...
   ExcerEngine2D.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\Debug\ExcerEngine2D.exe
