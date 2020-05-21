@@ -160,6 +160,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MappingState.cpp" />
     <ClCompile Include="OGLSprite.cpp" />
+    <ClCompile Include="OpenGLTestState.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SettingsState.cpp" />
     <ClCompile Include="ShaderUtil.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Image.h" />
     <ClInclude Include="MappingState.h" />
     <ClInclude Include="OGLSprite.h" />
+    <ClInclude Include="OpenGLTestState.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SettingsState.h" />
     <ClInclude Include="ShaderUtil.h" />

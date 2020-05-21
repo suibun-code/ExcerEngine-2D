@@ -97,10 +97,8 @@ public:
 		const int width, const int height, const int flags);
 
 	//GLEW
-	bool initGL(); //initializes matrices and clear color
 	void printProgramLog(GLuint program);
 	void printShaderLog(GLuint shader);
-	void handleKeys(unsigned char key, int x, int y); //input handler
 
 	bool is_running() { return m_b_running; }
 	Sint32 get_mouse_posX() { return m_i_mousePosX; }

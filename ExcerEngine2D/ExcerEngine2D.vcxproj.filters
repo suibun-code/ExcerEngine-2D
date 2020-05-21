@@ -98,6 +98,9 @@
     <ClCompile Include="..\include\imgui\imgui_impl_opengl3.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
+    <ClCompile Include="OpenGLTestState.cpp">
+      <Filter>States</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine.h">
@@ -177,6 +180,9 @@
     </ClInclude>
     <ClInclude Include="..\include\imgui\imgui_impl_opengl3.h">
       <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="OpenGLTestState.h">
+      <Filter>States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
