@@ -7,7 +7,7 @@
 class ShaderUtil
 {
 private:
-	unsigned int gProgramID;
+	unsigned int gProgramID = NULL;
 	unsigned int get_compiled_shader(unsigned int shader_type, const std::string& shader_source);
 
 public:

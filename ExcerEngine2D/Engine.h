@@ -10,6 +10,8 @@
 #include "SDL_image.h"
 #include "SDL_mixer.h"
 #include "SDL_ttf.h"
+#include "imgui_impl_sdl.h"
+#include "imgui_impl_opengl3.h"
 
 //GLEW
 #include "glew.h"
@@ -46,6 +48,7 @@ private:
 	GLuint tex = 0;
 
 	//boolean checks
+	bool m_b_gameInstanceEnabled = true;
 	bool m_b_running = false;
 	bool m_b_gotTick = false;
 	bool m_b_LMBState = false;

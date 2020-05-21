@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Engine.h"
+#include "GameInstance.h"
 
 int main(int argc, char* args[])
 {
@@ -14,7 +15,6 @@ int main(int argc, char* args[])
 		{
 			Engine::singleton_instance()->update(Engine::singleton_instance()->get_delta_time());
 			Engine::singleton_instance()->render();
-			SDL_GL_SwapWindow(Engine::singleton_instance()->get_window());
 		}
 	}
 

@@ -5,6 +5,7 @@
 #include "Engine.h"
 #include "TitleState.h"
 #include "SplashState.h"
+#include "GameInstance.h"
 
 Engine* Engine::instance = nullptr;
 
@@ -74,11 +75,6 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 				ConsoleIO::get_instance()->system_ok("SDL Renderer Initilization", 0);
 				return false;
 			}
-
-			//ImGui
-			ImGui::CreateContext();
-			ImGuiSDL::Initialize(SDL_m_Renderer, width, height);
-
 		}
 		else
 		{
@@ -92,7 +88,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		return false;
 	}
 
-	//Create context
+	//create context
 	gContext = SDL_GL_CreateContext(SDL_m_Window);
 
 	if (gContext == NULL)
@@ -108,25 +104,33 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 		if (glewError != GLEW_OK)
 		{
-			printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
+			printf("Error initializing GLEW. %s\n", glewGetErrorString(glewError));
 		}
 	}
 
 	if (!initGL())
-	{
 		printf("Unable to initialize OpenGL!\n");
-	}
 
-	srand((unsigned)time(NULL)); //set random seed
+	//ImGui
+	ImGui::CreateContext();
+	ImGui_ImplSDL2_InitForOpenGL(SDL_m_Window, gContext);
+	ImGui_ImplOpenGL3_Init("#version 150");
+
+	//set random seed
+	srand((unsigned)time(NULL));
 
 	m_keyStates = SDL_GetKeyboardState(nullptr);
 	m_p_FSM = new StateMachine();
 	m_p_AM = new AudioManager();
 	m_p_AM->set_music_volume(15);
 	m_p_AM->load_sound("res/audio/effect/menubtn.wav");
-	m_p_FSM->change_state(new SplashState());
+	m_p_FSM->change_state(new TitleState());
 
 	m_b_running = true;
+
+	//enable game instance
+	m_b_gameInstanceEnabled = true;
+
 	return true;
 }
 
@@ -151,8 +155,8 @@ bool Engine::initGL()
 	GLfloat colorData[] =
 	{
 		1.f, 0.f, 0.f, //top left
-		0.f, 0.f, 0.f, //top right
-		1.f, 1.f, 0.f, //bottom right
+		1.f, 0.f, 0.f, //top right
+		0.f, 1.f, 0.f, //bottom right
 		1.f, 0.f, 0.f  //bottom left
 	};
 
@@ -421,7 +425,10 @@ bool Engine::tick()
 
 void Engine::update(float deltaTime)
 {
-	m_p_FSM->update(deltaTime);
+	//m_p_FSM->update(deltaTime);
+
+	if (m_b_gameInstanceEnabled == true)
+		GameInstance::singleton_instance()->update();
 }
 
 void Engine::render()
@@ -451,6 +458,11 @@ void Engine::render()
 
 	//unbind program
 	//glUseProgram(NULL);
+
+	if (m_b_gameInstanceEnabled == true)
+		GameInstance::singleton_instance()->render();
+
+	SDL_GL_SwapWindow(Engine::singleton_instance()->get_window());
 }
 
 void Engine::handle_events()
@@ -506,7 +518,10 @@ void Engine::handle_events()
 		}
 	}
 
-	m_p_FSM->handle_state_events();
+	//m_p_FSM->handle_state_events();
+
+	if (m_b_gameInstanceEnabled == true)
+		GameInstance::singleton_instance()->handle_events();
 }
 
 void Engine::quit()
@@ -518,12 +533,16 @@ void Engine::clean()
 {
 	//cleanup ImGui
 	ImGui::DestroyContext();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplSDL2_Shutdown();
 
 	//deallocate program
 	shaderUtil.delete_shaders();
 
+	//cleanup sdl
 	SDL_DestroyRenderer(SDL_m_Renderer);
 	SDL_DestroyWindow(SDL_m_Window);
+	SDL_GL_DeleteContext(gContext);
 	SDL_m_Window = NULL;
 	SDL_m_Renderer = NULL;
 	IMG_Quit();
