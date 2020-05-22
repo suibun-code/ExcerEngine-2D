@@ -47,6 +47,9 @@ private:
 	GLuint tVBO = 0;
 	GLuint tex = 0;
 
+	//event
+	SDL_Event event;
+
 	//boolean checks
 	bool m_b_gameInstanceEnabled = true;
 	bool m_b_running = false;
@@ -81,7 +84,7 @@ private:
 	AudioManager* m_p_AM = nullptr; //audio manager
 
 public:
-	const char* version = "v0.1.1";
+	const char* version = "v0.1.3";
 
 	static Engine* singleton_instance()
 	{
@@ -93,14 +96,17 @@ public:
 	Engine();
 	~Engine();
 
+	//init
 	bool init_all(const char* title, const int xpos, const int ypos,
 		const int width, const int height, const int flags);
+	void init_imgui();
 
 	//GLEW
 	void printProgramLog(GLuint program);
 	void printShaderLog(GLuint shader);
 
 	bool is_running() { return m_b_running; }
+	SDL_Event* get_event() { return &event; }
 	Sint32 get_mouse_posX() { return m_i_mousePosX; }
 	Sint32 get_mouse_posY() { return m_i_mousePosY; }
 	bool LM_state() { return m_b_LMBState; }

@@ -4,106 +4,155 @@
 //initialzie game instance
 GameInstance* GameInstance::gameInstance = nullptr;
 
-void GameInstance::m_ImGuiKeyMap()
+struct AppLog
+{
+	ImGuiTextBuffer     Buffer;
+	ImGuiTextFilter     Filter;
+	ImVector<int>       LineOffsets; // Index to lines offset. We maintain this with AddLog() calls.
+	bool                AutoScroll;  // Keep scrolling if already at the bottom.
+
+	AppLog()
+	{
+		AutoScroll = true;
+		Clear();
+	}
+
+	void Clear()
+	{
+		Buffer.clear();
+		LineOffsets.clear();
+		LineOffsets.push_back(0);
+	}
+
+	void AddLog(const char* fmt, ...) IM_FMTARGS(2)
+	{
+		int old_size = Buffer.size();
+		va_list args;
+		va_start(args, fmt);
+		Buffer.appendfv(fmt, args);
+		va_end(args);
+		for (int new_size = Buffer.size(); old_size < new_size; old_size++)
+			if (Buffer[old_size] == '\n')
+				LineOffsets.push_back(old_size + 1);
+	}
+
+	void Draw(const char* title, bool* p_open = NULL)
+	{
+		if (*p_open)
+		{
+			if (!ImGui::Begin(title, p_open))
+			{
+				ImGui::End();
+				return;
+			}
+
+			// Options menu
+			if (ImGui::BeginPopup("Options"))
+			{
+				ImGui::Checkbox("Auto-scroll", &AutoScroll);
+				ImGui::EndPopup();
+			}
+
+			// Main window
+			if (ImGui::SmallButton("[Debug] Add an entry"))
+			{
+				AddLog("Hello\n");
+
+				//static int counter = 0;
+				//const char* categories[3] = { "info", "warn", "error" };
+				//const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
+				//for (int n = 0; n < 5; n++)
+				//{
+				//	const char* category = categories[counter % IM_ARRAYSIZE(categories)];
+				//	const char* word = words[counter % IM_ARRAYSIZE(words)];
+				//	AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
+				//		ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
+				//	counter++;
+				//}
+			}
+			if (ImGui::Button("Options"))
+				ImGui::OpenPopup("Options");
+			ImGui::SameLine();
+			bool clear = ImGui::Button("Clear");
+			ImGui::SameLine();
+			bool copy = ImGui::Button("Copy");
+			ImGui::SameLine();
+			ImGui::Text("Filter:");
+			ImGui::SameLine();
+			Filter.Draw("", -100.0f);
+
+			ImGui::Separator();
+			ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
+
+			if (clear)
+				Clear();
+			if (copy)
+				ImGui::LogToClipboard();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+			const char* buf = Buffer.begin();
+			const char* buf_end = Buffer.end();
+			if (Filter.IsActive())
+			{
+				// In this example we don't use the clipper when Filter is enabled.
+				// This is because we don't have a random access on the result on our filter.
+				// A real application processing logs with ten of thousands of entries may want to store the result of
+				// search/filter.. especially if the filtering function is not trivial (e.g. reg-exp).
+				for (int line_no = 0; line_no < LineOffsets.Size; line_no++)
+				{
+					const char* line_start = buf + LineOffsets[line_no];
+					const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+					if (Filter.PassFilter(line_start, line_end))
+						ImGui::TextUnformatted(line_start, line_end);
+				}
+			}
+			else
+			{
+				// The simplest and easy way to display the entire buffer:
+				//   ImGui::TextUnformatted(buf_begin, buf_end);
+				// And it'll just work. TextUnformatted() has specialization for large blob of text and will fast-forward
+				// to skip non-visible lines. Here we instead demonstrate using the clipper to only process lines that are
+				// within the visible area.
+				// If you have tens of thousands of items and their processing cost is non-negligible, coarse clipping them
+				// on your side is recommended. Using ImGuiListClipper requires
+				// - A) random access into your data
+				// - B) items all being the  same height,
+				// both of which we can handle since we an array pointing to the beginning of each line of text.
+				// When using the filter (in the block of code above) we don't have random access into the data to display
+				// anymore, which is why we don't use the clipper. Storing or skimming through the search result would make
+				// it possible (and would be recommended if you want to search through tens of thousands of entries).
+				ImGuiListClipper clipper;
+				clipper.Begin(LineOffsets.Size);
+				while (clipper.Step())
+				{
+					for (int line_no = clipper.DisplayStart; line_no < clipper.DisplayEnd; line_no++)
+					{
+						const char* line_start = buf + LineOffsets[line_no];
+						const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+						ImGui::TextUnformatted(line_start, line_end);
+					}
+				}
+				clipper.End();
+			}
+			ImGui::PopStyleVar();
+
+			if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+				ImGui::SetScrollHereY(1.0f);
+
+			ImGui::EndChild();
+			ImGui::End();
+		}
+	}
+};
+
+GameInstance::GameInstance()
 {
 	ImGuiIO& io = ImGui::GetIO();
+	m_UIFont = io.Fonts->AddFontFromFileTTF("font/CircularStd-Black.ttf", 13.0f);
 
-	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
-	io.KeyMap[ImGuiKey_Tab] = SDL_SCANCODE_TAB;
-	io.KeyMap[ImGuiKey_LeftArrow] = SDL_SCANCODE_LEFT;
-	io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
-	io.KeyMap[ImGuiKey_UpArrow] = SDL_SCANCODE_UP;
-	io.KeyMap[ImGuiKey_DownArrow] = SDL_SCANCODE_DOWN;
-	io.KeyMap[ImGuiKey_PageUp] = SDL_SCANCODE_PAGEUP;
-	io.KeyMap[ImGuiKey_PageDown] = SDL_SCANCODE_PAGEDOWN;
-	io.KeyMap[ImGuiKey_Home] = SDL_SCANCODE_HOME;
-	io.KeyMap[ImGuiKey_End] = SDL_SCANCODE_END;
-	io.KeyMap[ImGuiKey_Insert] = SDL_SCANCODE_INSERT;
-	io.KeyMap[ImGuiKey_Delete] = SDL_SCANCODE_DELETE;
-	io.KeyMap[ImGuiKey_Backspace] = SDL_SCANCODE_BACKSPACE;
-	io.KeyMap[ImGuiKey_Space] = SDL_SCANCODE_SPACE;
-	io.KeyMap[ImGuiKey_Enter] = SDL_SCANCODE_RETURN;
-	io.KeyMap[ImGuiKey_Escape] = SDL_SCANCODE_ESCAPE;
-
-	io.KeyMap[ImGuiKey_A] = SDL_SCANCODE_A;
-	io.KeyMap[ImGuiKey_C] = SDL_SCANCODE_C;
-	io.KeyMap[ImGuiKey_V] = SDL_SCANCODE_V;
-	io.KeyMap[ImGuiKey_X] = SDL_SCANCODE_X;
-	io.KeyMap[ImGuiKey_Y] = SDL_SCANCODE_Y;
-	io.KeyMap[ImGuiKey_Z] = SDL_SCANCODE_Z;
-}
-
-void GameInstance::m_ImGuiSetStyle()
-{
-// purple colors, 3 intensities
-#define HI(v)   ImVec4(0.333f, 0.102f, 0.545f, v)
-#define MED(v)  ImVec4(0.392f, 0.325f, 0.580f, v)
-#define LOW(v)  ImVec4(0.232f, 0.201f, 0.271f, v)
-// backgrounds (@todo: complete with BG_MED, BG_LOW)
-#define BG(v)   ImVec4(0.200f, 0.220f, 0.270f, v)
-// text
-#define TEXT(v) ImVec4(0.860f, 0.930f, 0.890f, v)
-
-	auto& style = ImGui::GetStyle();
-	style.Colors[ImGuiCol_Text] = TEXT(0.78f);
-	style.Colors[ImGuiCol_TextDisabled] = TEXT(0.28f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 0.8f); //window bg
-	//style.Colors[ImGuiCol_ChildWindowBg] = BG(0.58f);
-	style.Colors[ImGuiCol_PopupBg] = BG(0.9f);
-	style.Colors[ImGuiCol_Border] = ImVec4(0.31f, 0.31f, 1.00f, 0.00f);
-	style.Colors[ImGuiCol_BorderShadow] = ImVec4(0.00f, 0.00f, 0.00f, 0.00f);
-	style.Colors[ImGuiCol_FrameBg] = BG(1.00f);
-	style.Colors[ImGuiCol_FrameBgHovered] = MED(0.78f);
-	style.Colors[ImGuiCol_FrameBgActive] = MED(1.00f);
-	style.Colors[ImGuiCol_TitleBg] = LOW(1.00f);
-	style.Colors[ImGuiCol_TitleBgActive] = HI(1.0f);
-	style.Colors[ImGuiCol_TitleBgCollapsed] = BG(0.75f);
-	style.Colors[ImGuiCol_MenuBarBg] = BG(0.47f);
-	style.Colors[ImGuiCol_ScrollbarBg] = BG(1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.09f, 0.15f, 0.16f, 1.00f);
-	style.Colors[ImGuiCol_ScrollbarGrabHovered] = MED(0.78f);
-	style.Colors[ImGuiCol_ScrollbarGrabActive] = MED(1.00f);
-	style.Colors[ImGuiCol_CheckMark] = ImVec4(0.71f, 0.22f, 0.27f, 1.00f);
-	style.Colors[ImGuiCol_SliderGrab] = ImVec4(0.47f, 0.77f, 0.83f, 0.14f);
-	style.Colors[ImGuiCol_SliderGrabActive] = ImVec4(0.71f, 0.22f, 0.27f, 1.00f);
-	style.Colors[ImGuiCol_Button] = ImVec4(0.47f, 0.77f, 0.83f, 0.14f);
-	style.Colors[ImGuiCol_ButtonHovered] = MED(0.86f);
-	style.Colors[ImGuiCol_ButtonActive] = MED(1.00f);
-	style.Colors[ImGuiCol_Header] = MED(0.76f);
-	style.Colors[ImGuiCol_HeaderHovered] = MED(0.86f);
-	style.Colors[ImGuiCol_HeaderActive] = HI(1.00f);
-	//style.Colors[ImGuiCol_Column] = ImVec4(0.14f, 0.16f, 0.19f, 1.00f);
-	//style.Colors[ImGuiCol_ColumnHovered] = MED(0.78f);
-	//style.Colors[ImGuiCol_ColumnActive] = MED(1.00f);
-	style.Colors[ImGuiCol_ResizeGrip] = ImVec4(0.47f, 0.77f, 0.83f, 0.04f);
-	style.Colors[ImGuiCol_ResizeGripHovered] = MED(0.78f);
-	style.Colors[ImGuiCol_ResizeGripActive] = MED(1.00f);
-	style.Colors[ImGuiCol_PlotLines] = TEXT(0.63f);
-	style.Colors[ImGuiCol_PlotLinesHovered] = MED(1.00f);
-	style.Colors[ImGuiCol_PlotHistogram] = TEXT(0.63f);
-	style.Colors[ImGuiCol_PlotHistogramHovered] = MED(1.00f);
-	style.Colors[ImGuiCol_TextSelectedBg] = MED(0.43f);
-	// [...]
-	style.Colors[ImGuiCol_ModalWindowDarkening] = BG(0.73f);
-
-	style.WindowPadding = ImVec2(6, 4);
-	style.WindowRounding = 0.0f;
-	style.FramePadding = ImVec2(5, 2);
-	style.FrameRounding = 3.0f;
-	style.ItemSpacing = ImVec2(7, 1);
-	style.ItemInnerSpacing = ImVec2(1, 1);
-	style.TouchExtraPadding = ImVec2(0, 0);
-	style.IndentSpacing = 6.0f;
-	style.ScrollbarSize = 12.0f;
-	style.ScrollbarRounding = 16.0f;
-	style.GrabMinSize = 20.0f;
-	style.GrabRounding = 2.0f;
-
-	style.WindowTitleAlign.x = 0.50f;
-
-	style.Colors[ImGuiCol_Border] = ImVec4(0.539f, 0.479f, 0.255f, 0.162f);
-	style.FrameBorderSize = 0.0f;
-	style.WindowBorderSize = 1.0f;
+	//update ImGui	
+	if (m_displayUI)
+		m_updateImGui();
 }
 
 void GameInstance::m_updateImGui()
@@ -112,7 +161,11 @@ void GameInstance::m_updateImGui()
 	ImGui_ImplSDL2_NewFrame(Engine::singleton_instance()->get_window());
 	ImGui::NewFrame();
 
+	ImGui::PushFont(m_UIFont);
+
 	std::string windowString = "Game Instance";
+
+	ImGui::SetNextWindowSize(ImVec2(150, 100), 0);
 
 	ImGui::Begin(&windowString[0], NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_MenuBar);
 
@@ -120,12 +173,22 @@ void GameInstance::m_updateImGui()
 
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("Help                       "))
+		if (ImGui::BeginMenu("Help"))
 		{
 			ImGui::Separator();
 			ImGui::MenuItem("About", NULL, &m_displayAbout);
 			ImGui::EndMenu();
 		}
+
+		ImGui::NextColumn();
+
+		if (ImGui::BeginMenu("Log"))
+		{
+			ImGui::Separator();
+			ImGui::MenuItem("Show", NULL, &m_displayLog);
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMenuBar();
 	}
 
@@ -145,18 +208,14 @@ void GameInstance::m_updateImGui()
 		ImGui::End();
 	}
 
+	static AppLog log;
+	ImGui::SetNextWindowSize(ImVec2(500, 400), ImGuiCond_FirstUseEver);
+	log.Draw("Log", &m_displayLog);
+
+	ImGui::PopFont();
+
 	ImGui::End();
 	ImGui::EndFrame();
-}
-
-GameInstance::GameInstance()
-{
-	//update ImGui	
-	if (m_displayUI)
-		m_updateImGui();
-
-	m_ImGuiKeyMap();
-	m_ImGuiSetStyle();
 }
 
 void GameInstance::render()

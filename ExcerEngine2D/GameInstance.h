@@ -1,5 +1,7 @@
 #pragma once
 
+#include "imgui.h"
+
 class GameInstance
 {
 private:
@@ -8,10 +10,12 @@ private:
 	// ImGui menu variables
 	bool m_displayAbout = false;
 	bool m_displayUI = true;
+	bool m_displayLog = false;
+	
+	//ImGui fonts
+	ImFont* m_UIFont = nullptr;
 
 	// ImGui utility functions
-	void m_ImGuiKeyMap();
-	void m_ImGuiSetStyle();
 	void m_updateImGui();
 
 public:

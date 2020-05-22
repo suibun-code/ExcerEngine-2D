@@ -19,8 +19,6 @@ private:
 	void clean_vector(std::vector<T> vec);
 
 	// ImGui utility functions
-	void m_ImGuiKeyMap();
-	void m_ImGuiSetStyle();
 	void m_updateImGui();
 
 public:
