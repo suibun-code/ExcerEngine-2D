@@ -47,7 +47,7 @@ void GameInstance::m_ImGuiSetStyle()
 	auto& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text] = TEXT(0.78f);
 	style.Colors[ImGuiCol_TextDisabled] = TEXT(0.28f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 0.5f); //window bg
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 0.8f); //window bg
 	//style.Colors[ImGuiCol_ChildWindowBg] = BG(0.58f);
 	style.Colors[ImGuiCol_PopupBg] = BG(0.9f);
 	style.Colors[ImGuiCol_Border] = ImVec4(0.31f, 0.31f, 1.00f, 0.00f);
@@ -131,9 +131,17 @@ void GameInstance::m_updateImGui()
 
 	if (m_displayAbout)
 	{
-		ImGui::Begin("ExcerEngine2D", &m_displayAbout, ImGuiWindowFlags_AlwaysAutoResize);
+		ImGui::Begin("About", &m_displayAbout, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Separator();
-		ImGui::Text("Author: Ramin Amiri");
+		ImGui::Text("ExcerEngine2D");
+		ImGui::Text("Developed by Ramin Amiri");
+		ImGui::NewLine();
+		ImGui::Text("Developed using:");
+		ImGui::Text("- SDL 2.0.12");
+		ImGui::Text("- OpenGL 3.3");
+		ImGui::Text("- ImGui");
+		ImGui::NewLine();
+		ImGui::Text("https://github.com/suibun-code/excerengine-2d");
 		ImGui::End();
 	}
 
@@ -146,11 +154,13 @@ GameInstance::GameInstance()
 	//update ImGui	
 	if (m_displayUI)
 		m_updateImGui();
+
+	m_ImGuiKeyMap();
+	m_ImGuiSetStyle();
 }
 
 void GameInstance::render()
 {
-	//std::cout << "\nrender";
 	//render ImGui
 	if (m_displayUI)
 	{
@@ -163,8 +173,6 @@ void GameInstance::render()
 
 void GameInstance::update()
 {
-	//std::cout << "\nupdate";
-
 	//update ImGui
 	if (m_displayUI)
 		m_updateImGui();
@@ -184,7 +192,4 @@ void GameInstance::handle_events()
 
 	io.DisplaySize.x = (float)Engine::singleton_instance()->get_window_width();
 	io.DisplaySize.y = (float)Engine::singleton_instance()->get_window_height();
-
-	m_ImGuiKeyMap();
-	m_ImGuiSetStyle();
 }

@@ -1,4 +1,2 @@
-﻿  GameInstance.cpp
-C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\GameInstance.cpp(45,1): warning C4005: 'TEXT': macro redefinition
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winnt.h(603): message : see previous definition of 'TEXT'
+﻿  OpenGLTestState.cpp
   ExcerEngine2D.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\Debug\ExcerEngine2D.exe

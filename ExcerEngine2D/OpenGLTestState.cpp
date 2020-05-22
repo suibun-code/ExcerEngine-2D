@@ -84,7 +84,7 @@ void OpenGLTestState::enter()
 	GLint texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord");
 	glUniform1f(monoAlpha, .5f);
 
-	SDL_Surface* testSurface = IMG_Load("res/img/VIDEOGAME.png");
+	SDL_Surface* testSurface = IMG_Load("res/img/sample.png");
 
 	glGenTextures(1, &tex); // generate texture
 	glBindTexture(GL_TEXTURE_2D, tex); //bind texture
