@@ -1,6 +1,6 @@
 # ExcerEngine2D
 
-Built ground up with C++ & GLSL, ExcerEngine2D is a simple in-development 2D game engine utilizing SDL and OpenGL 3.3, with user interface utilizing ImGui.
+Built ground up with C++ & GLSL version #150 core, ExcerEngine2D is a simple in-development 2D game engine utilizing SDL and OpenGL 3.3, with user interface utilizing ImGui.
 Currently, it is only available via a demo game.
 
  ---------
