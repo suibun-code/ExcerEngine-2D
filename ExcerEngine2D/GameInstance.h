@@ -6,7 +6,7 @@ private:
 	static GameInstance* gameInstance;
 
 	// ImGui menu variables
-	bool m_displayAbout = true;
+	bool m_displayAbout = false;
 	bool m_displayUI = true;
 
 	// ImGui utility functions

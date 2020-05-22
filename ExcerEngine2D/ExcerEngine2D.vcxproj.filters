@@ -21,14 +21,11 @@
     <Filter Include="shaders">
       <UniqueIdentifier>{9a622089-0137-4d52-bb01-b01b2d94ad69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine Core">
+      <UniqueIdentifier>{b6019bd2-d8ee-45dd-9d8b-b985348512ba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FSM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -89,9 +86,6 @@
     <ClCompile Include="OGLSprite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameInstance.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\include\imgui\imgui_impl_sdl.cpp">
       <Filter>imgui</Filter>
     </ClCompile>
@@ -101,11 +95,17 @@
     <ClCompile Include="OpenGLTestState.cpp">
       <Filter>States</Filter>
     </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInstance.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Engine Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FSM.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -172,9 +172,6 @@
     <ClInclude Include="OGLSprite.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="GameInstance.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\imgui\imgui_impl_sdl.h">
       <Filter>imgui</Filter>
     </ClInclude>
@@ -183,6 +180,12 @@
     </ClInclude>
     <ClInclude Include="OpenGLTestState.h">
       <Filter>States</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Engine Core</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInstance.h">
+      <Filter>Engine Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
