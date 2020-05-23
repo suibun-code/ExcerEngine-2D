@@ -64,6 +64,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 
 		SDL_m_surface = IMG_Load("res/img/icon.png");
 		SDL_SetWindowIcon(SDL_m_Window, SDL_m_surface);
+		SDL_FreeSurface(SDL_m_surface);
 	}
 	else
 	{
@@ -71,7 +72,6 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		return false;
 	}
 
-	SDL_FreeSurface(SDL_m_surface);
 	if (Mix_Init(MIX_INIT_MP3) != 0)
 	{
 		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);

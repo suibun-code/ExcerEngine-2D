@@ -7,8 +7,9 @@ GameInstance* GameInstance::gameInstance = nullptr;
 GameInstance::GameInstance()
 {
 	//update ImGui	
-	if (m_displayUI)
-		m_updateImGui();
+	if (Engine::singleton_instance()->is_running())
+		if (m_displayUI)
+			m_updateImGui();
 }
 
 void GameInstance::m_updateImGui()
@@ -121,7 +122,7 @@ void GameInstance::dump_startup_log()
 	}
 	else
 	{
-		
+
 		log.AddLog("GameInstance::dump_startup_log() called. Buffer is empty.");
 	}
 }
