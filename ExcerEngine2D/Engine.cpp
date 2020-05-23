@@ -18,6 +18,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
 		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 1);
+		GameInstance::singleton_instance()->add_log("[OK] SDL Core Initilization");
 
 		//Use OpenGL 3.1 core
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -29,11 +30,13 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		if (SDL_m_Window != nullptr)
 		{
 			ConsoleIO::get_instance()->system_ok("SDL Window Initilization", 1);
+			GameInstance::singleton_instance()->add_log("[OK] SDL Window Initilization");
 			SDL_m_Renderer = SDL_CreateRenderer(SDL_m_Window, -1, SDL_RENDERER_ACCELERATED);
 			if (SDL_m_Renderer != nullptr)
 			{
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
 				ConsoleIO::get_instance()->system_ok("SDL Renderer Initilization", 1);
+				GameInstance::singleton_instance()->add_log("[OK] SDL Renderer Initilization");
 				SDL_SetRenderDrawColor(SDL_m_Renderer, 255, 0, 0, 255);
 				SDL_RenderSetLogicalSize(SDL_m_Renderer, window_width, window_height);
 				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
@@ -42,6 +45,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 				if (IMG_Init(IMG_INIT_PNG) != 0)
 				{
 					ConsoleIO::get_instance()->system_ok("SDL Image Initilization", 1);
+					GameInstance::singleton_instance()->add_log("[OK] SDL Image Initilization");
 					SDL_m_surface = IMG_Load("res/img/icon.png");
 					SDL_SetWindowIcon(SDL_m_Window, SDL_m_surface);
 					SDL_FreeSurface(SDL_m_surface);
@@ -50,42 +54,52 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 						Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);
 						Mix_AllocateChannels(16);
 						ConsoleIO::get_instance()->system_ok("SDL Mixer Initilization", 1);
+						GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initilization");
 
 						if (TTF_Init() == 0)
+						{
 							ConsoleIO::get_instance()->system_ok("SDL Font Initilization", 1);
+							GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
+						}
 						else
 						{
 							ConsoleIO::get_instance()->system_ok("SDL Font Initilization", 0);
+							GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
 							return false;
 						}
 					}
 					else
 					{
 						ConsoleIO::get_instance()->system_ok("SDL Mixer Initilization", 0);
+						GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initilization");
 						return false;
 					}
 				}
 				else
 				{
 					ConsoleIO::get_instance()->system_ok("SDL Image Initilization", 0);
+					GameInstance::singleton_instance()->add_log("[FAIL] SDL Image Initilization");
 					return false;
 				}
 			}
 			else
 			{
 				ConsoleIO::get_instance()->system_ok("SDL Renderer Initilization", 0);
+				GameInstance::singleton_instance()->add_log("[FAIL] SDL Renderer Initilization");
 				return false;
 			}
 		}
 		else
 		{
 			ConsoleIO::get_instance()->system_ok("SDL Window Initilization", 0);
+			GameInstance::singleton_instance()->add_log("[FAIL] SDL Window Initilization");
 			return false;
 		}
 	}
 	else
 	{
 		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 0);
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Core Initilization");
 		return false;
 	}
 
@@ -110,7 +124,8 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	}
 
 	//ImGui
-	ImGui::CreateContext();
+	ImGuiContext* ctx = ImGui::CreateContext();
+	ImGui::SetCurrentContext(ctx);
 	ImGui_ImplSDL2_InitForOpenGL(SDL_m_Window, gContext);
 	ImGui_ImplOpenGL3_Init("#version 150");
 
@@ -131,6 +146,8 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	//enable game instance
 	m_b_gameInstanceEnabled = true;
 
+	GameInstance::singleton_instance()->dump_startup_log();
+
 	return true;
 }
 
@@ -140,7 +157,8 @@ void Engine::init_imgui()
 
 	ImGuiIO& io = ImGui::GetIO();
 
-	// Keyboard mapping. ImGui will use those indices to peek into the io.KeysDown[] array.
+	//keyboard mapping
+	//ImGui will use those indices to peek into the io.KeysDown[] array
 	io.KeyMap[ImGuiKey_Tab] = SDL_SCANCODE_TAB;
 	io.KeyMap[ImGuiKey_LeftArrow] = SDL_SCANCODE_LEFT;
 	io.KeyMap[ImGuiKey_RightArrow] = SDL_SCANCODE_RIGHT;
@@ -346,7 +364,7 @@ void Engine::update(float deltaTime)
 	m_p_FSM->update(deltaTime);
 
 	if (m_b_gameInstanceEnabled == true)
-		GameInstance::singleton_instance()->update();
+		GameInstance::singleton_instance()->update(deltaTime);
 }
 
 void Engine::render()
@@ -365,12 +383,14 @@ void Engine::handle_events()
 
 	if (SDL_PollEvent(&event))
 	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+
 		if (event.type == SDL_WINDOWEVENT)
 		{
 			switch (event.window.event)
 			{
 			case SDL_WINDOWEVENT_RESIZED:
-				std::cout << "Window Resized\n";
+				GameInstance::singleton_instance()->add_log("Window resized.\n");
 				break;
 			case SDL_WINDOWEVENT_FOCUS_LOST:
 				if (!m_p_AM->is_paused())
@@ -409,24 +429,11 @@ void Engine::handle_events()
 			m_i_mousePosX = event.motion.x;
 			m_i_mousePosY = event.motion.y;
 			break;
-
-		case SDL_TEXTINPUT:
-			io.AddInputCharactersUTF8(event.text.text);
-			break;
-
-		case SDL_KEYUP:
-			int key = event.key.keysym.scancode;
-			IM_ASSERT(key >= 0 && key < IM_ARRAYSIZE(io.KeysDown));
-			io.KeysDown[key] = (event.type == SDL_KEYDOWN);
-			io.KeyShift = ((SDL_GetModState() & KMOD_SHIFT) != 0);
-			io.KeyCtrl = ((SDL_GetModState() & KMOD_CTRL) != 0);
-			io.KeyAlt = ((SDL_GetModState() & KMOD_ALT) != 0);
-			break;
 		}
 
 	}
 
-	//m_p_FSM->handle_state_events();
+	m_p_FSM->handle_state_events();
 
 	if (m_b_gameInstanceEnabled == true)
 		GameInstance::singleton_instance()->handle_events();
@@ -440,17 +447,17 @@ void Engine::quit()
 void Engine::clean()
 {
 	//cleanup ImGui
-	ImGui::DestroyContext();
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
+	ImGui::DestroyContext();
 
 	//deallocate program
 	shaderUtil.delete_shaders();
 
 	//cleanup sdl
 	SDL_DestroyRenderer(SDL_m_Renderer);
-	SDL_DestroyWindow(SDL_m_Window);
 	SDL_GL_DeleteContext(gContext);
+	SDL_DestroyWindow(SDL_m_Window);
 	SDL_m_Window = NULL;
 	SDL_m_Renderer = NULL;
 	IMG_Quit();

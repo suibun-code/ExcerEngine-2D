@@ -195,5 +195,6 @@
     <None Include="shaders\vs.shader">
       <Filter>shaders</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>
