@@ -1,5 +1,30 @@
-﻿  Engine.cpp
+﻿  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_opengl3.cpp
+  imgui_impl_sdl.cpp
+  imgui_widgets.cpp
+  imgui_sdl.cpp
+  AudioManager.cpp
+  Button.cpp
+  ButtonToggle.cpp
+  ConsoleIO.cpp
+  Engine.cpp
+  FSM.cpp
   GameInstance.cpp
+  GameState.cpp
+  Image.cpp
   Main.cpp
+  MappingState.cpp
+  OGLSprite.cpp
+  OpenGLTestState.cpp
+  Generating Code...
+  Compiling...
+  Player.cpp
+  SettingsState.cpp
+  ShaderUtil.cpp
+  SplashState.cpp
+  Sprite.cpp
+  TitleState.cpp
   Generating Code...
   ExcerEngine2D.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\Debug\ExcerEngine2D.exe

@@ -7,9 +7,8 @@ GameInstance* GameInstance::gameInstance = nullptr;
 GameInstance::GameInstance()
 {
 	//update ImGui	
-	if (Engine::singleton_instance()->is_running())
-		if (m_displayUI)
-			m_updateImGui();
+	if (m_displayUI)
+		m_updateImGui();
 }
 
 void GameInstance::m_updateImGui()
@@ -111,32 +110,26 @@ void GameInstance::handle_events()
 
 void GameInstance::dump_startup_log()
 {
-	if (Engine::singleton_instance()->is_running())
+	if (!logInputBuffer.empty())
 	{
-		if (!buffer.empty())
+		while (!logInputBuffer.empty())
 		{
-			while (!buffer.empty())
-			{
-				log.AddLog(buffer.back());
-				buffer.pop_back();
-				log.AddLog("\n");
-			}
+			log.AddLog(logInputBuffer.back());
+			logInputBuffer.pop_back();
+			log.AddLog("\n");
 		}
-		else
-		{
-			std::cout << "\nEMPTY";
-		}
+	}
+	else
+	{
+		
+		log.AddLog("GameInstance::dump_startup_log() called. Buffer is empty.");
 	}
 }
 
 void GameInstance::add_log(const char* fmt, ...)
 {
 	if (Engine::singleton_instance()->is_running())
-	{
 		log.AddLog(fmt);
-	}
 	else
-	{
-		buffer.push_back(fmt);
-	}
+		logInputBuffer.push_back(fmt);
 }

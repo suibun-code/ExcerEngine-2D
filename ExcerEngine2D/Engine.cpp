@@ -17,7 +17,6 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
-		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 1);
 		GameInstance::singleton_instance()->add_log("[OK] SDL Core Initilization");
 
 		//Use OpenGL 3.1 core
@@ -26,80 +25,73 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 		SDL_m_Window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
+	}
+	else
+	{
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Core Initilization");
+		return false;
+	}
 
-		if (SDL_m_Window != nullptr)
+	if (SDL_m_Window != nullptr)
+	{
+		GameInstance::singleton_instance()->add_log("[OK] SDL Window Initilization");
+		SDL_m_Renderer = SDL_CreateRenderer(SDL_m_Window, -1, SDL_RENDERER_ACCELERATED);
+	}
+	else
+	{
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Window Initilization");
+		return false;
+	}
+
+	if (SDL_m_Renderer != nullptr)
+	{
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Renderer Initilization");
+		SDL_SetRenderDrawColor(SDL_m_Renderer, 255, 0, 0, 255);
+		SDL_RenderSetLogicalSize(SDL_m_Renderer, window_width, window_height);
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
+		SDL_SetWindowMinimumSize(SDL_m_Window, 640, 360);
+	}
+	else
+	{
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Renderer Initilization");
+		return false;
+	}
+
+	if (IMG_Init(IMG_INIT_PNG) != 0)
+	{
+		GameInstance::singleton_instance()->add_log("[OK] SDL Image Initilization");
+
+		SDL_m_surface = IMG_Load("res/img/icon.png");
+		SDL_SetWindowIcon(SDL_m_Window, SDL_m_surface);
+	}
+	else
+	{
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Image Initilization");
+		return false;
+	}
+
+	SDL_FreeSurface(SDL_m_surface);
+	if (Mix_Init(MIX_INIT_MP3) != 0)
+	{
+		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);
+		Mix_AllocateChannels(16);
+
+		GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initilization");
+
+		if (TTF_Init() == 0)
 		{
-			ConsoleIO::get_instance()->system_ok("SDL Window Initilization", 1);
-			GameInstance::singleton_instance()->add_log("[OK] SDL Window Initilization");
-			SDL_m_Renderer = SDL_CreateRenderer(SDL_m_Window, -1, SDL_RENDERER_ACCELERATED);
-			if (SDL_m_Renderer != nullptr)
-			{
-				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
-				ConsoleIO::get_instance()->system_ok("SDL Renderer Initilization", 1);
-				GameInstance::singleton_instance()->add_log("[OK] SDL Renderer Initilization");
-				SDL_SetRenderDrawColor(SDL_m_Renderer, 255, 0, 0, 255);
-				SDL_RenderSetLogicalSize(SDL_m_Renderer, window_width, window_height);
-				SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
-				SDL_SetWindowMinimumSize(SDL_m_Window, 640, 360);
-
-				if (IMG_Init(IMG_INIT_PNG) != 0)
-				{
-					ConsoleIO::get_instance()->system_ok("SDL Image Initilization", 1);
-					GameInstance::singleton_instance()->add_log("[OK] SDL Image Initilization");
-					SDL_m_surface = IMG_Load("res/img/icon.png");
-					SDL_SetWindowIcon(SDL_m_Window, SDL_m_surface);
-					SDL_FreeSurface(SDL_m_surface);
-					if (Mix_Init(MIX_INIT_MP3) != 0)
-					{
-						Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);
-						Mix_AllocateChannels(16);
-						ConsoleIO::get_instance()->system_ok("SDL Mixer Initilization", 1);
-						GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initilization");
-
-						if (TTF_Init() == 0)
-						{
-							ConsoleIO::get_instance()->system_ok("SDL Font Initilization", 1);
-							GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
-						}
-						else
-						{
-							ConsoleIO::get_instance()->system_ok("SDL Font Initilization", 0);
-							GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
-							return false;
-						}
-					}
-					else
-					{
-						ConsoleIO::get_instance()->system_ok("SDL Mixer Initilization", 0);
-						GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initilization");
-						return false;
-					}
-				}
-				else
-				{
-					ConsoleIO::get_instance()->system_ok("SDL Image Initilization", 0);
-					GameInstance::singleton_instance()->add_log("[FAIL] SDL Image Initilization");
-					return false;
-				}
-			}
-			else
-			{
-				ConsoleIO::get_instance()->system_ok("SDL Renderer Initilization", 0);
-				GameInstance::singleton_instance()->add_log("[FAIL] SDL Renderer Initilization");
-				return false;
-			}
+			GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
 		}
 		else
 		{
-			ConsoleIO::get_instance()->system_ok("SDL Window Initilization", 0);
-			GameInstance::singleton_instance()->add_log("[FAIL] SDL Window Initilization");
+			GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
 			return false;
 		}
 	}
 	else
 	{
-		ConsoleIO::get_instance()->system_ok("SDL Core Initilization", 0);
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Core Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initilization");
 		return false;
 	}
 
@@ -185,13 +177,13 @@ void Engine::init_imgui()
 	//*****Style*****
 
 	// purple colors, 3 intensities
-	#define HI(v)   ImVec4(0.333f, 0.102f, 0.545f, v)
-	#define MED(v)  ImVec4(0.392f, 0.325f, 0.580f, v)
-	#define LOW(v)  ImVec4(0.232f, 0.201f, 0.271f, v)
-	// backgrounds (@todo: complete with BG_MED, BG_LOW)
-	#define BG(v)   ImVec4(0.20f, 0.220f, 0.270f, v)
-	// text
-	#define TEXTT(v) ImVec4(0.860f, 0.930f, 0.890f, v)
+#define HI(v)   ImVec4(0.333f, 0.102f, 0.545f, v)
+#define MED(v)  ImVec4(0.392f, 0.325f, 0.580f, v)
+#define LOW(v)  ImVec4(0.232f, 0.201f, 0.271f, v)
+// backgrounds (@todo: complete with BG_MED, BG_LOW)
+#define BG(v)   ImVec4(0.20f, 0.220f, 0.270f, v)
+// text
+#define TEXTT(v) ImVec4(0.860f, 0.930f, 0.890f, v)
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text] = TEXTT(0.78f);

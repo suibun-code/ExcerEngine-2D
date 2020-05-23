@@ -157,7 +157,7 @@ private:
 
 	// ImGui log variables
 	AppLog log;
-	std::vector<const char*> buffer;
+	std::vector<const char*> logInputBuffer;
 	
 	// ImGui fonts
 	ImFont* m_UIFont = nullptr;
