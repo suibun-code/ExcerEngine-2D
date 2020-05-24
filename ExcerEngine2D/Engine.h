@@ -74,12 +74,15 @@ private:
 	//window dimensions
 	int window_width = 1280, window_height = 720;
 
+	//sdl variables
 	SDL_Window* SDL_m_Window = nullptr; //window
 	SDL_Renderer* SDL_m_Renderer = nullptr; //renderer
 	SDL_Surface* SDL_m_surface = nullptr; //surface
 
+	//key states
 	const uint8_t* m_keyStates = nullptr; //key states
 
+	//state machine and audio manager
 	StateMachine* m_p_FSM = nullptr; //state machine
 	AudioManager* m_p_AM = nullptr; //audio manager
 

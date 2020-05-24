@@ -78,20 +78,20 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		Mix_AllocateChannels(16);
 
 		GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initilization");
-
-		if (TTF_Init() == 0)
-		{
-			GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
-		}
-		else
-		{
-			GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
-			return false;
-		}
 	}
 	else
 	{
 		GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initilization");
+		return false;
+	}
+
+	if (TTF_Init() == 0)
+	{
+		GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
+	}
+	else
+	{
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
 		return false;
 	}
 
@@ -149,6 +149,8 @@ void Engine::init_imgui()
 
 	ImGuiIO& io = ImGui::GetIO();
 
+	GameInstance::singleton_instance()->set_ui_font(io.Fonts->AddFontFromFileTTF("font/CircularStd-Black.ttf", 13.0f));
+
 	//keyboard mapping
 	//ImGui will use those indices to peek into the io.KeysDown[] array
 	io.KeyMap[ImGuiKey_Tab] = SDL_SCANCODE_TAB;
@@ -179,7 +181,7 @@ void Engine::init_imgui()
 	// purple colors, 3 intensities
 #define HI(v)   ImVec4(0.333f, 0.102f, 0.545f, v)
 #define MED(v)  ImVec4(0.392f, 0.325f, 0.580f, v)
-#define LOW(v)  ImVec4(0.232f, 0.201f, 0.271f, v)
+#define LOW(v)  ImVec4(0.222f, 0.051f, 0.470f, v)
 // backgrounds (@todo: complete with BG_MED, BG_LOW)
 #define BG(v)   ImVec4(0.20f, 0.220f, 0.270f, v)
 // text
@@ -188,7 +190,7 @@ void Engine::init_imgui()
 	ImGuiStyle& style = ImGui::GetStyle();
 	style.Colors[ImGuiCol_Text] = TEXTT(0.78f);
 	style.Colors[ImGuiCol_TextDisabled] = TEXTT(0.28f);
-	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 0.99f); //window bg
+	style.Colors[ImGuiCol_WindowBg] = ImVec4(0.13f, 0.14f, 0.17f, 0.95f); //window bg
 	//style.Colors[ImGuiCol_ChildWindowBg] = BG(0.58f);
 	style.Colors[ImGuiCol_PopupBg] = BG(0.9f);
 	style.Colors[ImGuiCol_Border] = ImVec4(0.31f, 0.31f, 1.0f, 0.0f);

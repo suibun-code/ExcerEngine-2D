@@ -8,8 +8,10 @@ GameInstance::GameInstance()
 {
 	//update ImGui	
 	if (Engine::singleton_instance()->is_running())
+	{
 		if (m_displayUI)
 			m_updateImGui();
+	}
 }
 
 void GameInstance::m_updateImGui()
@@ -18,7 +20,8 @@ void GameInstance::m_updateImGui()
 	ImGui_ImplSDL2_NewFrame(Engine::singleton_instance()->get_window());
 	ImGui::NewFrame();
 
-	ImGui::PushFont(m_UIFont);
+	if (m_UIFont != nullptr)
+		ImGui::PushFont(m_UIFont);
 
 	std::string windowString = "Game Instance";
 
@@ -53,7 +56,7 @@ void GameInstance::m_updateImGui()
 	{
 		ImGui::Begin("About", &m_displayAbout, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Separator();
-		ImGui::Text("ExcerEngine2D");
+		ImGui::TextColored(ImVec4(0.5f, 0.f, 0.5f, 1.f), "ExcerEngine2D");
 		ImGui::Text("Developed by Ramin Amiri");
 		ImGui::NewLine();
 		ImGui::Text("Developed using:");
@@ -115,7 +118,7 @@ void GameInstance::dump_startup_log()
 	{
 		while (!logInputBuffer.empty())
 		{
-			log.AddLog(logInputBuffer.back());
+			log.AddLog("[%.1f sec]: %s", ImGui::GetTime(), logInputBuffer.back());
 			logInputBuffer.pop_back();
 			log.AddLog("\n");
 		}
@@ -130,7 +133,9 @@ void GameInstance::dump_startup_log()
 void GameInstance::add_log(const char* fmt, ...)
 {
 	if (Engine::singleton_instance()->is_running())
-		log.AddLog(fmt);
+		log.AddLog("[%.1f sec]: %s", ImGui::GetTime(), fmt);
+	//AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
+	//	ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
 	else
 		logInputBuffer.push_back(fmt);
 }

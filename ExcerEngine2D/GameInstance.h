@@ -1,5 +1,6 @@
 #pragma once
 
+#include <iostream>
 #include <vector>
 
 #include "imgui.h"
@@ -58,18 +59,20 @@ struct AppLog
 			{
 				AddLog("Hello\n");
 
-				//static int counter = 0;
-				//const char* categories[3] = { "info", "warn", "error" };
-				//const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
-				//for (int n = 0; n < 5; n++)
-				//{
-				//	const char* category = categories[counter % IM_ARRAYSIZE(categories)];
-				//	const char* word = words[counter % IM_ARRAYSIZE(words)];
-				//	AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
-				//		ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
-				//	counter++;
-				//}
+				static int counter = 0;
+				const char* categories[3] = { "info", "warn", "error" };
+				const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
+
+				for (int n = 0; n < 5; n++)
+				{
+					const char* category = categories[counter % IM_ARRAYSIZE(categories)];
+					const char* word = words[counter % IM_ARRAYSIZE(words)];
+					AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
+						ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
+					counter++;
+				}
 			}
+
 			if (ImGui::Button("Options"))
 				ImGui::OpenPopup("Options");
 			ImGui::SameLine();
@@ -90,6 +93,8 @@ struct AppLog
 				ImGui::LogToClipboard();
 
 			ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+			ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.75f, 0.75f, 0.f, 0.95f));
+
 			const char* buf = Buffer.begin();
 			const char* buf_end = Buffer.end();
 			if (Filter.IsActive())
@@ -102,8 +107,10 @@ struct AppLog
 				{
 					const char* line_start = buf + LineOffsets[line_no];
 					const char* line_end = (line_no + 1 < LineOffsets.Size) ? (buf + LineOffsets[line_no + 1] - 1) : buf_end;
+
 					if (Filter.PassFilter(line_start, line_end))
 						ImGui::TextUnformatted(line_start, line_end);
+
 				}
 			}
 			else
@@ -134,7 +141,9 @@ struct AppLog
 				}
 				clipper.End();
 			}
+
 			ImGui::PopStyleVar();
+			ImGui::PopStyleColor();
 
 			if (AutoScroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
 				ImGui::SetScrollHereY(1.0f);
@@ -181,4 +190,6 @@ public:
 	void handle_events();
 	void dump_startup_log();
 	void add_log(const char* fmt, ...) IM_FMTARGS(2);
+
+	void set_ui_font (ImFont* font) { m_UIFont = font; }
 };
