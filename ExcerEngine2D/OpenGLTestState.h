@@ -16,13 +16,14 @@ private:
 	GLuint gIBO = 0;
 	GLuint cVBO = 0;
 	GLuint tVBO = 0;
-	GLuint tex = 0;
+	GLuint textures[2] = { NULL };
 
 public:
 	OpenGLTestState() : State("OpenGLTest") {}
 	void enter();
 	void update(float deltaTime);
 	void render();
+	void handle_state_events(const SDL_Event* event);
 	void resume() {}
 	void exit();
 };

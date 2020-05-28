@@ -96,20 +96,18 @@ void GameInstance::update(float deltaTime)
 		m_updateImGui();
 }
 
-void GameInstance::handle_events()
+void GameInstance::handle_events(const SDL_Event* event)
 {
-	ImGuiIO& io = ImGui::GetIO();
-
-	io.DeltaTime = Engine::singleton_instance()->get_delta_time();
-	int mouseX = Engine::singleton_instance()->get_mouse_posX(), mouseY = Engine::singleton_instance()->get_mouse_posY();
-	const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
-	io.MousePos = ImVec2(static_cast<float>(Engine::singleton_instance()->get_mouse_posX()), static_cast<float>(Engine::singleton_instance()->get_mouse_posY()));
-	io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-	io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
-	//io.MouseWheel = static_cast<float>(wheel);
-
-	io.DisplaySize.x = (float)Engine::singleton_instance()->get_window_width();
-	io.DisplaySize.y = (float)Engine::singleton_instance()->get_window_height();
+	switch (event->type)
+	{
+	case SDL_KEYDOWN:
+		if (event->key.keysym.scancode == SDL_SCANCODE_GRAVE)
+			if (Engine::singleton_instance()->is_game_instance_enabled() == false)
+				Engine::singleton_instance()->set_game_instance(true);
+			else
+				Engine::singleton_instance()->set_game_instance(false);
+		break;
+	}
 }
 
 void GameInstance::dump_startup_log()

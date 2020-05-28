@@ -17,7 +17,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) == 0)
 	{
-		GameInstance::singleton_instance()->add_log("[OK] SDL Core Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Core Initialization");
 
 		//Use OpenGL 3.1 core
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -28,25 +28,25 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Core Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Core Initialization");
 		return false;
 	}
 
 	if (SDL_m_Window != nullptr)
 	{
-		GameInstance::singleton_instance()->add_log("[OK] SDL Window Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Window Initialization");
 		SDL_m_Renderer = SDL_CreateRenderer(SDL_m_Window, -1, SDL_RENDERER_ACCELERATED);
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Window Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Window Initialization");
 		return false;
 	}
 
 	if (SDL_m_Renderer != nullptr)
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "best");
-		GameInstance::singleton_instance()->add_log("[OK] SDL Renderer Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Renderer Initialization");
 		SDL_SetRenderDrawColor(SDL_m_Renderer, 255, 0, 0, 255);
 		SDL_RenderSetLogicalSize(SDL_m_Renderer, window_width, window_height);
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "0");
@@ -54,13 +54,13 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Renderer Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Renderer Initialization");
 		return false;
 	}
 
 	if (IMG_Init(IMG_INIT_PNG) != 0)
 	{
-		GameInstance::singleton_instance()->add_log("[OK] SDL Image Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Image Initialization");
 
 		SDL_m_surface = IMG_Load("res/img/icon.png");
 		SDL_SetWindowIcon(SDL_m_Window, SDL_m_surface);
@@ -68,7 +68,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Image Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Image Initialization");
 		return false;
 	}
 
@@ -77,21 +77,21 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 		Mix_OpenAudio(22050, AUDIO_S16SYS, 2, 4096);
 		Mix_AllocateChannels(16);
 
-		GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Mixer Initialization");
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Mixer Initialization");
 		return false;
 	}
 
 	if (TTF_Init() == 0)
 	{
-		GameInstance::singleton_instance()->add_log("[OK] SDL Font Initilization");
+		GameInstance::singleton_instance()->add_log("[OK] SDL Font Initialization");
 	}
 	else
 	{
-		GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initilization");
+		GameInstance::singleton_instance()->add_log("[FAIL] SDL Font Initialization");
 		return false;
 	}
 
@@ -139,6 +139,7 @@ bool Engine::init_all(const char* title, const int xpos, const int ypos, const i
 	m_b_gameInstanceEnabled = true;
 
 	GameInstance::singleton_instance()->dump_startup_log();
+	GameInstance::singleton_instance()->add_log("Welcome to ExcerEngine2D.\n");
 
 	return true;
 }
@@ -356,28 +357,22 @@ bool Engine::tick()
 void Engine::update(float deltaTime)
 {
 	m_p_FSM->update(deltaTime);
-
-	if (m_b_gameInstanceEnabled == true)
-		GameInstance::singleton_instance()->update(deltaTime);
 }
 
 void Engine::render()
 {
 	m_p_FSM->render();
-
-	if (m_b_gameInstanceEnabled == true)
-		GameInstance::singleton_instance()->render();
-
-	SDL_GL_SwapWindow(Engine::singleton_instance()->get_window());
 }
 
 void Engine::handle_events()
 {
+	//std::cout << "H: " << m_b_gameInstanceEnabled << "\n";
+
 	ImGuiIO& io = ImGui::GetIO();
 
 	if (SDL_PollEvent(&event))
 	{
-		ImGui_ImplSDL2_ProcessEvent(&event);
+		ImGui_ImplSDL2_ProcessEvent(&event); //does most of the input/event processing
 
 		if (event.type == SDL_WINDOWEVENT)
 		{
@@ -386,6 +381,7 @@ void Engine::handle_events()
 			case SDL_WINDOWEVENT_RESIZED:
 				GameInstance::singleton_instance()->add_log("Window resized.\n");
 				break;
+
 			case SDL_WINDOWEVENT_FOCUS_LOST:
 				if (!m_p_AM->is_paused())
 				{
@@ -395,6 +391,7 @@ void Engine::handle_events()
 				else
 					m_b_musicPlaying = true;
 				break;
+
 			case SDL_WINDOWEVENT_FOCUS_GAINED:
 				if (m_p_AM->is_paused() && m_b_musicPlaying == false)
 					m_p_AM->resume_music();
@@ -427,10 +424,7 @@ void Engine::handle_events()
 
 	}
 
-	m_p_FSM->handle_state_events();
-
-	if (m_b_gameInstanceEnabled == true)
-		GameInstance::singleton_instance()->handle_events();
+	m_p_FSM->handle_state_events(&event);
 }
 
 void Engine::quit()

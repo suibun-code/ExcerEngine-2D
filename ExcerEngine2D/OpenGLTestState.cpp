@@ -84,23 +84,58 @@ void OpenGLTestState::enter()
 	GLint texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord");
 	glUniform1f(monoAlpha, .5f);
 
-	SDL_Surface* testSurface = IMG_Load("res/img/sample.png");
+	//***TEXTURES***
 
-	glGenTextures(1, &tex); // generate texture
-	glBindTexture(GL_TEXTURE_2D, tex); //bind texture
+	glGenTextures(2, textures); // generate texture
 
 	int mode = GL_RGB;
+	SDL_Surface* testSurface = nullptr;
 
-	if (testSurface->format->BytesPerPixel == 4) {
+	//TEXTURE1
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, textures[0]); //bind texture
+
+	testSurface = IMG_Load("res/img/sample.png");
+
+	mode = GL_RGB;
+
+	if (testSurface->format->BytesPerPixel == 4)
 		mode = GL_RGBA;
-	}
+
 	glTexImage2D(GL_TEXTURE_2D, 0, mode, testSurface->w, testSurface->h, 0, mode, GL_UNSIGNED_BYTE, testSurface->pixels);
 	SDL_FreeSurface(testSurface);
+
+	glUniform1i(glGetUniformLocation(shaderUtil.get_shaders(), "tex"), 0);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); //wrapping repeat on X
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER); //wrapping clamp to border on 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //interpolation method for scaling down
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //interpolation method for scaling up
+
+	//TEXTURE2
+
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, textures[1]);
+
+	testSurface = IMG_Load("res/img/sample2.png");
+
+	mode = GL_RGB;
+
+	if (testSurface->format->BytesPerPixel == 4)
+		mode = GL_RGBA;
+
+	glTexImage2D(GL_TEXTURE_2D, 0, mode, testSurface->w, testSurface->h, 0, mode, GL_UNSIGNED_BYTE, testSurface->pixels);
+	SDL_FreeSurface(testSurface);
+
+	glUniform1i(glGetUniformLocation(shaderUtil.get_shaders(), "tex2"), 1);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER); //wrapping repeat on X
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER); //wrapping clamp to border on 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR); //interpolation method for scaling down
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR); //interpolation method for scaling up
+
+	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	//float borderColor[] = { 1.f, 1.f, 1.f, 1.f }; //border color if clamping to border
 	//glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor); //set the border color
@@ -181,6 +216,7 @@ void OpenGLTestState::enter()
 
 void OpenGLTestState::update(float deltaTime)
 {
+	State::update(deltaTime);
 }
 
 void OpenGLTestState::render()
@@ -197,16 +233,30 @@ void OpenGLTestState::render()
 	//render
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
-	//set array data
-	glBindVertexArray(gVAO2);
+	////set array data
+	//glBindVertexArray(gVAO2);
 
-	//render
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+	////render
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 	//disable vertex position
 	glDisableVertexAttribArray(gVertexPos2DLocation);
+
+	State::render();
+}
+
+void OpenGLTestState::handle_state_events(const SDL_Event* event)
+{
+	State::handle_state_events(event);
 }
 
 void OpenGLTestState::exit()
 {
+	glBindTexture(textures[0], 0);
+	glBindTexture(textures[1], 0);
+	glDeleteTextures(2, textures);
+	glDeleteBuffers(1, &gVBO);
+	glDeleteBuffers(1, &gIBO);
+	glDeleteBuffers(1, &cVBO);
+	glDeleteBuffers(1, &tVBO);
 }

@@ -109,6 +109,8 @@ public:
 	void printShaderLog(GLuint shader);
 
 	bool is_running() { return m_b_running; }
+	bool is_game_instance_enabled() { return m_b_gameInstanceEnabled; }
+	void set_game_instance(bool gameInstanceEnabled) { m_b_gameInstanceEnabled = gameInstanceEnabled; }
 	SDL_Event* get_event() { return &event; }
 	Sint32 get_mouse_posX() { return m_i_mousePosX; }
 	Sint32 get_mouse_posY() { return m_i_mousePosY; }

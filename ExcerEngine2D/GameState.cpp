@@ -136,20 +136,9 @@ void GameState::render()
 	State::render();
 }
 
-void GameState::handle_state_events()
+void GameState::handle_state_events(const SDL_Event* event)
 {
-	ImGuiIO& io = ImGui::GetIO();
 
-	io.DeltaTime = Engine::singleton_instance()->get_delta_time();
-	int mouseX = Engine::singleton_instance()->get_mouse_posX(), mouseY = Engine::singleton_instance()->get_mouse_posY();
-	const int buttons = SDL_GetMouseState(&mouseX, &mouseY);
-	io.MousePos = ImVec2(static_cast<float>(Engine::singleton_instance()->get_mouse_posX()), static_cast<float>(Engine::singleton_instance()->get_mouse_posY()));
-	io.MouseDown[0] = buttons & SDL_BUTTON(SDL_BUTTON_LEFT);
-	io.MouseDown[1] = buttons & SDL_BUTTON(SDL_BUTTON_RIGHT);
-	//io.MouseWheel = static_cast<float>(wheel);
-
-	io.DisplaySize.x = (float)Engine::singleton_instance()->get_window_width();
-	io.DisplaySize.y = (float)Engine::singleton_instance()->get_window_height();
 }
 
 void GameState::exit()

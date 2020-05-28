@@ -26,7 +26,7 @@ public:
 	void enter();
 	void update(float deltaTime);
 	void render();
-	void handle_state_events() override;
+	void handle_state_events(const SDL_Event* event);
 	void resume() {}
 	void exit();
 };

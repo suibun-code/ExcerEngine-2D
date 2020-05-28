@@ -1,8 +1,11 @@
 #pragma once
 
-#include <iostream>
 #include <vector>
 
+//SDL
+#include "SDL.h"
+
+//IMGUI
 #include "imgui.h"
 
 struct AppLog
@@ -59,18 +62,18 @@ struct AppLog
 			{
 				AddLog("Hello\n");
 
-				static int counter = 0;
-				const char* categories[3] = { "info", "warn", "error" };
-				const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
+				//static int counter = 0;
+				//const char* categories[3] = { "info", "warn", "error" };
+				//const char* words[] = { "Bumfuzzled", "Cattywampus", "Snickersnee", "Abibliophobia", "Absquatulate", "Nincompoop", "Pauciloquent" };
 
-				for (int n = 0; n < 5; n++)
-				{
-					const char* category = categories[counter % IM_ARRAYSIZE(categories)];
-					const char* word = words[counter % IM_ARRAYSIZE(words)];
-					AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
-						ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
-					counter++;
-				}
+				//for (int n = 0; n < 5; n++)
+				//{
+				//	const char* category = categories[counter % IM_ARRAYSIZE(categories)];
+				//	const char* word = words[counter % IM_ARRAYSIZE(words)];
+				//	AddLog("[%05d] [%s] Hello, current time is %.1f, here's a word: '%s'\n",
+				//		ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
+				//	counter++;
+				//}
 			}
 
 			if (ImGui::Button("Options"))
@@ -187,7 +190,7 @@ public:
 
 	void render();
 	void update(float deltaTime);
-	void handle_events();
+	void handle_events(const SDL_Event* event);
 	void dump_startup_log();
 	void add_log(const char* fmt, ...) IM_FMTARGS(2);
 

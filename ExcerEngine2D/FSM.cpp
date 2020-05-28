@@ -2,19 +2,36 @@
 
 #include "FSM.h"
 #include "Engine.h"
+#include "GameInstance.h"
+
+void State::update(float deltaTime)
+{
+	//if (Engine::singleton_instance()->key_down(SDL_SCANCODE_GRAVE))
+	//	if (Engine::singleton_instance()->is_game_instance_enabled() == false)
+	//		Engine::singleton_instance()->set_game_instance(true);
+	//	else
+	//		Engine::singleton_instance()->set_game_instance(false);
+
+	if (Engine::singleton_instance()->is_game_instance_enabled() == true)
+		GameInstance::singleton_instance()->update(deltaTime);
+}
 
 //State
 void State::render()
 {
-	SDL_RenderPresent(Engine::singleton_instance()->get_renderer());
+	if (Engine::singleton_instance()->is_game_instance_enabled() == true)
+		GameInstance::singleton_instance()->render();
+
+	SDL_GL_SwapWindow(Engine::singleton_instance()->get_window());
 }
 
-void State::handle_state_events()
+void State::handle_state_events(const SDL_Event* event)
 {
-	
+	//if (Engine::singleton_instance()->is_game_instance_enabled() == true)
+		GameInstance::singleton_instance()->handle_events(event);
 }
 
-void State::render_font(bool render, const char *text, int x, int y)
+void State::render_font(bool render, const char* text, int x, int y)
 {
 	if (render)
 	{
@@ -54,19 +71,19 @@ void StateMachine::render()
 		m_v_states.back()->render();
 }
 
-void StateMachine::handle_state_events()
+void StateMachine::handle_state_events(SDL_Event* event)
 {
 	if (!m_v_states.empty())
-		m_v_states.back()->handle_state_events();
+		m_v_states.back()->handle_state_events(event);
 }
 
-void StateMachine::push_state(State *pState)
+void StateMachine::push_state(State* pState)
 {
 	m_v_states.push_back(pState);
 	m_v_states.back()->enter();
 }
 
-void StateMachine::change_state(State *pState)
+void StateMachine::change_state(State* pState)
 {
 	while (!m_v_states.empty())
 	{

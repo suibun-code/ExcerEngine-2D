@@ -23,9 +23,9 @@ public:
 	State(std::string state_name) : state_name(state_name) {}
 
 	virtual void enter() = 0;
-	virtual void update(float deltaTime) = 0;
+	virtual void update(float deltaTime);
 	virtual void render();
-	virtual void handle_state_events();
+	virtual void handle_state_events(const SDL_Event* event);
 	virtual void resume() = 0;
 	virtual void exit() = 0;
 
@@ -46,7 +46,7 @@ public:
 	~StateMachine();
 	void update(float deltaTime);
 	void render();
-	void handle_state_events();
+	void handle_state_events(SDL_Event* event);
 	void push_state(State* pState);
 	void change_state(State* pState);
 	void pop_state();
