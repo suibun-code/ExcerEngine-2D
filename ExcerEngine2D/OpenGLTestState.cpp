@@ -2,6 +2,9 @@
 
 void OpenGLTestState::enter()
 {
+	//time
+	t_start = std::chrono::high_resolution_clock::now();
+
 	//IBO data
 	GLuint indexData[] =
 	{
@@ -78,10 +81,11 @@ void OpenGLTestState::enter()
 	//clear to this color
 	glClearColor(.5f, .5f, .5f, 1.f);
 
-	GLint posAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "position");
-	GLint colAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "color");
-	GLint monoAlpha = glGetUniformLocation(shaderUtil.get_shaders(), "alpha");
-	GLint texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord");
+	posAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "position"); //position
+	colAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "color"); //color
+	monoAlpha = glGetUniformLocation(shaderUtil.get_shaders(), "alpha"); //alpha
+	texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord"); //texture
+	uniTime = glGetUniformLocation(shaderUtil.get_shaders(), "time"); //time
 	glUniform1f(monoAlpha, .5f);
 
 	//***TEXTURES***
@@ -221,22 +225,20 @@ void OpenGLTestState::update(float deltaTime)
 
 void OpenGLTestState::render()
 {
-	//clear color buffer
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	//time
+	t_now = std::chrono::high_resolution_clock::now();
+	time = std::chrono::duration_cast<std::chrono::duration<float>>(t_now - t_start).count();
+	glUniform1f(uniTime, time);
 
 	//enable vertex position
 	glEnableVertexAttribArray(gVertexPos2DLocation);
 
-	//set array data
 	glBindVertexArray(gVAO);
-
-	//render
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
-	////set array data
 	//glBindVertexArray(gVAO2);
-
-	////render
 	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 	//disable vertex position

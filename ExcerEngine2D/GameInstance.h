@@ -58,9 +58,9 @@ struct AppLog
 			}
 
 			// Main window
-			if (ImGui::SmallButton("[Debug] Add an entry"))
-			{
-				AddLog("Hello\n");
+			//if (ImGui::SmallButton("[Debug] Add an entry"))
+			//{
+			//	AddLog("Hello\n");
 
 				//static int counter = 0;
 				//const char* categories[3] = { "info", "warn", "error" };
@@ -74,7 +74,7 @@ struct AppLog
 				//		ImGui::GetFrameCount(), category, ImGui::GetTime(), word);
 				//	counter++;
 				//}
-			}
+			//}
 
 			if (ImGui::Button("Options"))
 				ImGui::OpenPopup("Options");

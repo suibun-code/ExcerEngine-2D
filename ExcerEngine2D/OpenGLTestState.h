@@ -1,5 +1,7 @@
 #pragma once
 
+#include <chrono>
+
 #include "FSM.h"
 #include "Engine.h"
 #include "ShaderUtil.h"
@@ -17,6 +19,16 @@ private:
 	GLuint cVBO = 0;
 	GLuint tVBO = 0;
 	GLuint textures[2] = { NULL };
+
+	//time
+	float time = 0.f;
+	std::chrono::steady_clock::time_point t_now;
+	std::chrono::steady_clock::time_point t_start;
+	GLint posAttrib = 0;
+	GLint colAttrib = 0;
+	GLint monoAlpha = 0;
+	GLint texAttrib = 0;
+	GLint uniTime = 0;
 
 public:
 	OpenGLTestState() : State("OpenGLTest") {}
