@@ -128,7 +128,7 @@ void OpenGLTestState::enter()
 	uniModel = glGetUniformLocation(shaderUtil.get_shaders(), "model");
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
 
-	transformObject(0.5f, glm::vec3(0.f, 0.f, 1.f), 0.f, glm::vec3(500.f, 0.f, 0.f));
+	transformObject(0.5f, glm::vec3(0.f, 0.f, 1.f), 0.f, glm::vec3(500.f, 0.f, 0.f)); //currently muse be used before MVP calculation.
 
 	MVP = projection * view * model;
 	uniMVP = glGetUniformLocation(shaderUtil.get_shaders(), "MVP");
