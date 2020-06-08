@@ -2,9 +2,6 @@
 
 void OpenGLTestState::enter()
 {
-	//time
-	t_start = std::chrono::high_resolution_clock::now();
-
 	//IBO data
 	GLuint indexData[] =
 	{
@@ -15,10 +12,20 @@ void OpenGLTestState::enter()
 	//VBO data
 	GLfloat vertexData[] =
 	{
-		-0.25f,  0.25f, //top left
-		 0.75f,  0.25f, //top right
-		 0.75f, -0.75f, //bottom right
-		-0.25f, -0.75f, //bottom left
+		1280.f, 0.f, //top right
+		0.f,    0.f, //top left
+		0.f,    720.f, //bottom left
+		1280.f, 720.f, //bottom right
+
+		// 0.5f,  0.5f, //top right
+		//-0.5f,  0.5f, //top left
+		//-0.5f, -0.5f, //bottom left
+		// 0.5f, -0.5f, //bottom right
+
+		//-0.25f,  0.25f, //top left
+		// 0.75f,  0.25f, //top right
+		// 0.75f, -0.75f, //bottom right
+		//-0.25f, -0.75f, //bottom left
 	};
 
 	GLfloat colorData[] =
@@ -68,8 +75,14 @@ void OpenGLTestState::enter()
 		0.f, 1.f  //bottom left
 	};
 
+	//time
+	t_start = std::chrono::high_resolution_clock::now();
+
+	//blending
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	//load program
 	shaderUtil.load_shaders("shaders/vs.shader", "shaders/fs.shader");
 	//bind program
@@ -86,6 +99,43 @@ void OpenGLTestState::enter()
 	monoAlpha = glGetUniformLocation(shaderUtil.get_shaders(), "alpha"); //alpha
 	texAttrib = glGetAttribLocation(shaderUtil.get_shaders(), "texcoord"); //texture
 	uniTime = glGetUniformLocation(shaderUtil.get_shaders(), "time"); //time
+
+	/***TEST VARIABLES***/
+
+	glViewport(0, 0, 1280, 720);
+
+	//PROJECTION
+	//projection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 1.0f, 10.0f);
+	//projection = glm::ortho(-5.f, 5.f, -5.f, 5.f, -5.f, 5.f);
+	projection = glm::ortho(0.f, 1280.f, 720.f, 0.f, -5.f, 5.f);
+	GLint uniProj = glGetUniformLocation(shaderUtil.get_shaders(), "projection");
+	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+
+	//VIEW
+	view = glm::lookAt(
+		glm::vec3(0.f, 0.f, 3.f),
+		glm::vec3(0.f, 0.f, -1.f),
+		glm::vec3(0.f, 1.f, 0.f)
+	);
+	GLint uniView = glGetUniformLocation(shaderUtil.get_shaders(), "view");
+	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
+
+	//MODEL
+	model = glm::mat4(1.0f);
+	//model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	//glm::vec4 result = model * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
+	//printf("%f, %f, %f\n", result.x, result.y, result.z);
+
+	GLint uniModel = glGetUniformLocation(shaderUtil.get_shaders(), "model");
+	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+
+	MVP = projection * view * model;
+	GLint uniMVP = glGetUniformLocation(shaderUtil.get_shaders(), "MVP");
+	glUniformMatrix4fv(uniMVP, 1, GL_FALSE, glm::value_ptr(MVP));
+
+	/***END TEST VARIABLES***/
+
 	glUniform1f(monoAlpha, .5f);
 
 	//***TEXTURES***

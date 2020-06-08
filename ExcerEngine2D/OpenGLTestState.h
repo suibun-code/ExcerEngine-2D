@@ -5,12 +5,16 @@
 #include "FSM.h"
 #include "Engine.h"
 #include "ShaderUtil.h"
+#include "glm/glm/glm.hpp"
+#include "glm/glm/gtc/matrix_transform.hpp"
+#include "glm/glm/gtc/type_ptr.hpp"
 
 class OpenGLTestState : public State
 {
 private:
 	ShaderUtil shaderUtil;
 
+	//GL ints
 	GLint gVertexPos2DLocation = -1;
 	GLuint gVAO = 0;
 	GLuint gVAO2 = 0;
@@ -19,6 +23,13 @@ private:
 	GLuint cVBO = 0;
 	GLuint tVBO = 0;
 	GLuint textures[2] = { NULL };
+
+	//GL matrices
+	glm::mat4 model;
+	glm::mat4 view;
+	glm::mat4 projection;
+	glm::mat4 MVP;
+
 
 	//time
 	float time = 0.f;
