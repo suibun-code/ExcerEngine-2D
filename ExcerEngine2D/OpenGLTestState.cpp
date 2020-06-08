@@ -105,8 +105,6 @@ void OpenGLTestState::enter()
 	glViewport(0, 0, 1280, 720);
 
 	//PROJECTION
-	//projection = glm::perspective(glm::radians(45.0f), 1280.0f / 720.0f, 1.0f, 10.0f);
-	//projection = glm::ortho(-5.f, 5.f, -5.f, 5.f, -5.f, 5.f);
 	projection = glm::ortho(0.f, 1280.f, 720.f, 0.f, -5.f, 5.f);
 	GLint uniProj = glGetUniformLocation(shaderUtil.get_shaders(), "projection");
 	glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
@@ -117,7 +115,7 @@ void OpenGLTestState::enter()
 		glm::vec3(0.f, 0.f, -1.f),
 		glm::vec3(0.f, 1.f, 0.f)
 	);
-	GLint uniView = glGetUniformLocation(shaderUtil.get_shaders(), "view");
+	uniView = glGetUniformLocation(shaderUtil.get_shaders(), "view");
 	glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 
 	//MODEL
@@ -127,11 +125,13 @@ void OpenGLTestState::enter()
 	//glm::vec4 result = model * glm::vec4(1.0f, 0.0f, 0.0f, 1.0f);
 	//printf("%f, %f, %f\n", result.x, result.y, result.z);
 
-	GLint uniModel = glGetUniformLocation(shaderUtil.get_shaders(), "model");
+	uniModel = glGetUniformLocation(shaderUtil.get_shaders(), "model");
 	glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
 
+	transformObject(0.5f, glm::vec3(0.f, 0.f, 1.f), 0.f, glm::vec3(500.f, 0.f, 0.f));
+
 	MVP = projection * view * model;
-	GLint uniMVP = glGetUniformLocation(shaderUtil.get_shaders(), "MVP");
+	uniMVP = glGetUniformLocation(shaderUtil.get_shaders(), "MVP");
 	glUniformMatrix4fv(uniMVP, 1, GL_FALSE, glm::value_ptr(MVP));
 
 	/***END TEST VARIABLES***/
@@ -311,4 +311,17 @@ void OpenGLTestState::exit()
 	glDeleteBuffers(1, &gIBO);
 	glDeleteBuffers(1, &cVBO);
 	glDeleteBuffers(1, &tVBO);
+}
+
+void OpenGLTestState::transformObject(float scale, glm::vec3 rotationAxis, float rotationAngle, glm::vec3 translation)
+{
+		model = glm::mat4(1.0f);
+		model = glm::translate(model, translation);
+		model = glm::rotate(model, glm::radians(rotationAngle), rotationAxis);
+		model = glm::scale(model, glm::vec3(scale));
+		//MVP = projection * view * model;
+		//glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(MVP));
+		glUniformMatrix4fv(uniModel, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(uniProj, 1, GL_FALSE, glm::value_ptr(projection));
+		glUniformMatrix4fv(uniView, 1, GL_FALSE, glm::value_ptr(view));
 }

@@ -24,6 +24,12 @@ private:
 	GLuint tVBO = 0;
 	GLuint textures[2] = { NULL };
 
+	//uniforms
+	GLint uniModel = 0;
+	GLint uniView = 0;
+	GLint uniProj = 0;
+	GLint uniMVP = 0;
+
 	//GL matrices
 	glm::mat4 model;
 	glm::mat4 view;
@@ -49,5 +55,8 @@ public:
 	void handle_state_events(const SDL_Event* event);
 	void resume() {}
 	void exit();
+
+	//**TEST**
+	void transformObject(float scale, glm::vec3 rotationAxis, float rotationAngle, glm::vec3 translation);
 };
 
