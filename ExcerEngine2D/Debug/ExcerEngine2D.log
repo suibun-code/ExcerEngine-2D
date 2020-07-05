@@ -1,2 +1,55 @@
-﻿  OpenGLTestState.cpp
-  ExcerEngine2D.vcxproj -> C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\Debug\ExcerEngine2D.exe
+﻿  imgui.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui.cpp': No such file or directory
+  imgui_demo.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui_demo.cpp': No such file or directory
+  imgui_draw.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui_draw.cpp': No such file or directory
+  imgui_impl_opengl3.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui_impl_opengl3.cpp': No such file or directory
+  imgui_impl_sdl.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui_impl_sdl.cpp': No such file or directory
+  imgui_widgets.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui\imgui_widgets.cpp': No such file or directory
+  imgui_sdl.cpp
+c1xx : fatal error C1083: Cannot open source file: '..\include\imgui_sdl\imgui_sdl.cpp': No such file or directory
+  AudioManager.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\AudioManager.h(6,10): fatal error C1083: Cannot open include file: 'SDL_mixer.h': No such file or directory
+  Button.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Button.h(5,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ButtonToggle.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Button.h(5,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  ConsoleIO.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  Engine.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Engine.h(9,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  FSM.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  GameInstance.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\GameInstance.h(6,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  GameState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  Image.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Image.h(3,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  Main.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Engine.h(9,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  MappingState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  OGLSprite.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\OGLSprite.h(5,10): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  OpenGLTestState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  Generating Code...
+  Compiling...
+  Player.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Sprite.h(3,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  SettingsState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  ShaderUtil.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\ShaderUtil.h(3,10): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  SplashState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  Sprite.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\Sprite.h(3,10): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  TitleState.cpp
+C:\Users\joopi\OneDrive\Desktop\Code\personal\ExcerEngine2D\ExcerEngine2D\FSM.h(6,10): fatal error C1083: Cannot open include file: 'SDL_ttf.h': No such file or directory
+  Generating Code...

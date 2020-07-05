@@ -8,7 +8,7 @@ in vec2 Texcoord;
 out vec4 outColor;
 
 uniform sampler2D tex;
-uniform sampler2D tex2;
+uniform sampler2D tex2; //blending two textures together
 
 uniform float time;
 
@@ -21,8 +21,10 @@ void main()
     //else
     //    outColor = texture(tex, vec2(1.0 - Texcoord.x, 1.0 - Texcoord.y));
 
-    float factor = (sin(time * 3.0) + 1.0) / 2.0;
-    outColor = mix(texture(tex, Texcoord), texture(tex2, Texcoord), factor);
+
+    /***BLEND TWO TEXTURES TOGETHER, TRANSITION BETWEEN THEM WITH TIME***/
+    //float factor = (sin(time * 3.0) + 1.0) / 2.0;
+    //outColor = mix(texture(tex, Texcoord), texture(tex2, Texcoord), factor);
 
     /***WATER-LIKE OUTPUT OF BOTTOM HALF***/
     //if (Texcoord.y < 0.5)
@@ -34,5 +36,5 @@ void main()
     //outColor = mix(texture(tex, Texcoord), texture(tex2, Texcoord), alpha);
 
     /***NORMAL OUTPUT***/
-    //outColor = texture(tex, Texcoord) * vec4(Color.xyz, alpha);
+    outColor = texture(tex, Texcoord) * vec4(Color.xyz, alpha);
 }
