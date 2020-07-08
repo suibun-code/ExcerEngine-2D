@@ -18,7 +18,7 @@ public:
 	bool load_shaders(const std::string& vertexShaderFile, const std::string& fragmentShaderFile);
 
 	//use program
-	void use_shaders();
+	ShaderUtil& use_shaders();
 
 	//get program
 	GLuint get_shaders();

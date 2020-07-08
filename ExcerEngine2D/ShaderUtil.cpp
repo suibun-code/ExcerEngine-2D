@@ -55,9 +55,10 @@ bool ShaderUtil::load_shaders(const std::string& vertexShaderFile, const std::st
 	return true;
 }
 
-void ShaderUtil::use_shaders()
+ShaderUtil& ShaderUtil::use_shaders()
 {
 	glUseProgram(gProgramID);
+	return *this;
 }
 
 GLuint ShaderUtil::get_shaders()

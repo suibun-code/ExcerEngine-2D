@@ -1,6 +1,6 @@
-#version 150 core
+#version 330 core
 
-uniform float alpha;
+//layout(location = 0) in vec4 vertex; // <vec2 position, vec2 texCoords>
 
 in vec3 Color;
 in vec2 Texcoord;
@@ -8,8 +8,9 @@ in vec2 Texcoord;
 out vec4 outColor;
 
 uniform sampler2D tex;
-uniform sampler2D tex2; //blending two textures together
+//uniform sampler2D tex2;
 
+uniform float alpha;
 uniform float time;
 
 void main()
@@ -21,8 +22,7 @@ void main()
     //else
     //    outColor = texture(tex, vec2(1.0 - Texcoord.x, 1.0 - Texcoord.y));
 
-
-    /***BLEND TWO TEXTURES TOGETHER, TRANSITION BETWEEN THEM WITH TIME***/
+    /***SWITCH BETWEEN TWO IMAGES IN AN OPACITY METHOD OVER TIME***/
     //float factor = (sin(time * 3.0) + 1.0) / 2.0;
     //outColor = mix(texture(tex, Texcoord), texture(tex2, Texcoord), factor);
 
